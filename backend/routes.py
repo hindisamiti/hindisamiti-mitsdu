@@ -365,7 +365,7 @@ def get_images(current_admin):
 
 @route.route('/api/admin/images', methods=['POST'])
 @token_required
-def upload_image(current_admin):
+def upload_gallery_image(current_admin):
     try:
         if 'image' not in request.files:
             return jsonify({'message': 'No image file provided'}), 400
@@ -650,6 +650,17 @@ def upload_team_member_image(current_admin):
         if file.filename == '':
             return jsonify({'message': 'No file selected'}), 400
         
+        # Try Cloudinary upload
+        cloudinary_url = upload_image(file, folder="hindi_samiti/team")
+        
+        if cloudinary_url:
+            return jsonify({
+                'success': True,
+                'image_url': cloudinary_url,
+                'filename': file.filename
+            }), 200
+            
+        # Fallback to local (though Cloudinary should work)
         if file and allowed_file(file.filename):
             # Create team members upload directory
             team_upload_folder = os.path.join(current_app.config.get('UPLOAD_FOLDER', 'uploads'), 'team_members')
