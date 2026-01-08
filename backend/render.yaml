@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: hindi-samiti-backend
+    env: python
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1
