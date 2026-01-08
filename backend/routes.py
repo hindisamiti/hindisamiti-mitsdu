@@ -326,22 +326,80 @@ def update_intro(current_admin):
 @route.route('/api/admin/blogs/upload-cover', methods=['POST'])
 @jwt_required()
 def upload_blog_cover():
-    if 'image' not in request.files:
-        return jsonify({'error': 'No image file provided'}), 400
+    try:
+        print("📤 UPLOAD: Received blog cover image upload request")
         
-    file = request.files['image']
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
+        if 'image' not in request.files:
+            print("❌ UPLOAD: No image file in request")
+            return jsonify({'success': False, 'error': 'No image file provided'}), 400
+            
+        file = request.files['image']
+        print(f"📎 UPLOAD: File received: {file.filename}")
+        
+        if file.filename == '':
+            print("❌ UPLOAD: Empty filename")
+            return jsonify({'success': False, 'error': 'No selected file'}), 400
+        
+        if not allowed_file(file.filename):
+            print(f"❌ UPLOAD: Invalid file type: {file.filename}")
+            return jsonify({
+                'success': False, 
+                'error': 'Invalid file type. Only PNG, JPG, JPEG, GIF, and WEBP files are allowed'
+            }), 400
 
-    # Try Cloudinary upload
-    cloudinary_url = upload_image(file, folder="hindi_samiti/blogs")
-    if cloudinary_url:
+        # Try Cloudinary upload first
+        cloudinary_url = upload_image(file, folder="hindi_samiti/blogs")
+        if cloudinary_url:
+            print(f"✅ UPLOAD: Uploaded to Cloudinary: {cloudinary_url}")
+            return jsonify({
+                'success': True,
+                'image_url': cloudinary_url
+            }), 200
+        
+        # Fallback to local storage
+        print("📁 UPLOAD: Cloudinary failed, using local storage")
+        
+        # Create blog covers upload directory
+        upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+        blog_covers_folder = os.path.join(upload_folder, 'blog_covers')
+        os.makedirs(blog_covers_folder, exist_ok=True)
+        
+        # Reset file pointer if read by cloudinary
+        file.seek(0)
+        
+        # Generate unique filename
+        file_extension = file.filename.rsplit('.', 1)[1].lower()
+        filename = str(uuid.uuid4()) + '.' + file_extension
+        filepath = os.path.join(blog_covers_folder, filename)
+        
+        print(f"💾 UPLOAD: Saving to: {filepath}")
+        
+        # Save the file
+        file.save(filepath)
+        
+        # Verify file was saved
+        if os.path.exists(filepath):
+            file_size = os.path.getsize(filepath)
+            print(f"✅ UPLOAD: File saved successfully ({file_size} bytes)")
+        else:
+            print(f"❌ UPLOAD: File not found after save!")
+            return jsonify({'success': False, 'error': 'Failed to save file'}), 500
+        
+        # Return the image URL
+        image_url = f'/uploads/blog_covers/{filename}'
+        print(f"🔗 UPLOAD: Returning URL: {image_url}")
+        
         return jsonify({
             'success': True,
-            'image_url': cloudinary_url
+            'image_url': image_url,
+            'filename': filename
         }), 200
-        
-    return jsonify({'error': 'Upload failed'}), 500
+            
+    except Exception as e:
+        print(f"❌ UPLOAD ERROR: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @route.route('/api/admin/images', methods=['GET'])
 @token_required
@@ -1113,6 +1171,73 @@ def upload_event_cover_image(current_admin):
 def uploaded_file(filename):
     upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
     return send_file(os.path.join(upload_folder, filename))
+
+@route.route('/uploads/blog_covers/<filename>')
+def serve_blog_cover_image(filename):
+    """Serve blog cover images with proper headers and error handling"""
+    try:
+        # Get the upload folder path
+        upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+        blog_covers_folder = os.path.join(upload_folder, 'blog_covers')
+        
+        # Security check - prevent directory traversal
+        if '..' in filename or '/' in filename or '\\' in filename:
+            print(f"Security: Blocked access to {filename}")
+            abort(404)
+        
+        # Construct full file path
+        file_path = os.path.join(blog_covers_folder, filename)
+        
+        print(f"🔍 Attempting to serve blog cover image:")
+        print(f"   Filename: {filename}")
+        print(f"   Full path: {file_path}")
+        print(f"   File exists: {os.path.exists(file_path)}")
+        
+        # Check if file exists
+        if not os.path.exists(file_path):
+            print(f"❌ File not found: {file_path}")
+            if os.path.exists(blog_covers_folder):
+                available_files = os.listdir(blog_covers_folder)
+                print(f"📁 Available files: {available_files}")
+            else:
+                print(f"📁 Directory doesn't exist: {blog_covers_folder}")
+            abort(404)
+        
+        # Get file info
+        file_size = os.path.getsize(file_path)
+        print(f"📦 File size: {file_size} bytes")
+        
+        # Determine MIME type
+        mimetype, _ = mimetypes.guess_type(file_path)
+        if not mimetype:
+            mimetype = 'image/jpeg'
+        
+        print(f"🎯 MIME type: {mimetype}")
+        
+        # Create response
+        response = send_file(
+            file_path, 
+            mimetype=mimetype,
+            as_attachment=False,
+            conditional=True
+        )
+        
+        # Add CORS headers
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        response.headers['Access-Control-Allow-Methods'] = 'GET'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        
+        # Add caching headers
+        response.headers['Cache-Control'] = 'public, max-age=3600'
+        
+        print(f"✅ Successfully serving: {filename}")
+        return response
+        
+    except Exception as e:
+        print(f"❌ Error serving blog cover image {filename}: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        abort(500)
 
 
 @route.route('/api/events/<int:event_id>/check-registration', methods=['GET'])

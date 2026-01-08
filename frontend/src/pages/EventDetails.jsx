@@ -32,25 +32,25 @@ const EventDetails = () => {
     getEventDetails();
   }, [eventId]);
 
-const handleEmailCheck = async (e) => {
-  e.preventDefault();
-  
-  try {
-    // ✅ Use environment variable for API base URL
-    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
-    
-    const response = await fetch(`${API_BASE_URL}/api/events/${eventId}/check-registration?email=${encodeURIComponent(email)}`);
-    const data = await response.json();
-    
-    if (data.exists) {
-      setRegistrationStatus(data.status);
-    } else {
-      setShowRegistrationForm(true);
+  const handleEmailCheck = async (e) => {
+    e.preventDefault();
+
+    try {
+      // ✅ Use environment variable for API base URL
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+
+      const response = await fetch(`${API_BASE_URL}/api/events/${eventId}/check-registration?email=${encodeURIComponent(email)}`);
+      const data = await response.json();
+
+      if (data.exists) {
+        setRegistrationStatus(data.status);
+      } else {
+        setShowRegistrationForm(true);
+      }
+    } catch (error) {
+      console.error('Error checking email:', error);
     }
-  } catch (error) {
-    console.error('Error checking email:', error);
-  }
-};
+  };
 
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -173,7 +173,7 @@ const handleEmailCheck = async (e) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-yellow-50">
       <Navbar />
-      
+
       {/* Modal-style Content Container */}
       <section className="relative py-12 sm:py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -205,9 +205,9 @@ const handleEmailCheck = async (e) => {
               {/* Event Image Header */}
               {event.cover_image_url && (
                 <div className="relative h-64 sm:h-80">
-                  <img 
-                    src={event.cover_image_url} 
-                    alt={event.name} 
+                  <img
+                    src={event.cover_image_url}
+                    alt={event.name}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
@@ -241,21 +241,6 @@ const handleEmailCheck = async (e) => {
                   </div>
                 </div>
 
-                {/* "Uddeshya" Section */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl p-6 sm:p-8 mb-8 border-2 border-orange-300"
-                >
-                  <h2 className="text-2xl sm:text-3xl font-bold text-orange-900 mb-4 text-center" style={{ fontFamily: 'serif' }}>
-                    उद्देश्य
-                  </h2>
-                  <p className="text-orange-900 text-base sm:text-lg leading-relaxed text-center">
-                    {event.description || "कवि अपनी रचनाओं के माध्यम से हमें रोमांचित एवं भावविभोर कर देते हैं। वह अपने लेखन एवं विचार से हमारे मनोरंजन के साथ-साथ हमें सोचने का एक नया दृष्टिकोण भी प्रदान करते हैं।"}
-                  </p>
-                </motion.div>
-
                 {/* Registration Section */}
                 {registrationOpen ? (
                   <motion.div
@@ -268,13 +253,13 @@ const handleEmailCheck = async (e) => {
                       <FaCheckCircle className="w-8 h-8 text-orange-600" />
                       <h2 className="text-2xl sm:text-3xl font-bold text-orange-900">Registration</h2>
                     </div>
-                    
+
                     {registrationStatus ? (
                       getStatusBadge()
                     ) : showRegistrationForm ? (
-                      <RegistrationForm 
-                        event={event} 
-                        onSubmit={handleRegistrationSubmit} 
+                      <RegistrationForm
+                        event={event}
+                        onSubmit={handleRegistrationSubmit}
                       />
                     ) : (
                       <form onSubmit={handleEmailCheck} className="space-y-4">
@@ -314,7 +299,7 @@ const handleEmailCheck = async (e) => {
                       <FaTimesCircle className="w-8 h-8 text-gray-500" />
                       <h2 className="text-2xl sm:text-3xl font-bold text-gray-700">Registration Closed</h2>
                     </div>
-                    
+
                     <p className="text-gray-600 text-center text-lg">
                       Registration for this event is currently closed.
                       {eventDatePassed && " This event has already concluded."}
@@ -326,7 +311,7 @@ const handleEmailCheck = async (e) => {
           </div>
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );
