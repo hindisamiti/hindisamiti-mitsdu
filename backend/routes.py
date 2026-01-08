@@ -321,19 +321,7 @@ def update_intro(current_admin):
     db.session.commit()
     return jsonify({'message': 'Intro updated successfully'}), 200
 
-@route.route('/api/admin/blogs', methods=['POST'])
-@jwt_required()
-def create_blog():
-    data = request.json
-    new_blog = Blog(
-        title=data.get('title'),
-        content=data.get('content'),
-        cover_image_url=data.get('cover_image_url'),
-        author=data.get('author', 'Admin')
-    )
-    db.session.add(new_blog)
-    db.session.commit()
-    return jsonify(new_blog.to_dict()), 201
+
 
 @route.route('/api/admin/blogs/upload-cover', methods=['POST'])
 @jwt_required()
@@ -774,41 +762,7 @@ def delete_team_member(current_admin, member_id):
         db.session.rollback()
         return jsonify({'message': str(e)}), 500
 
-# Add route to serve team member images
-@route.route('/uploads/team_members/<filename>')
-def uploaded_team_member_file(filename):
-    """Serve team member images"""
-    try:
-        team_upload_folder = os.path.join(current_app.config.get('UPLOAD_FOLDER', 'uploads'), 'team_members')
-        
-        # Security check - ensure filename doesn't contain path traversal
-        if '..' in filename or '/' in filename or '\\' in filename:
-            abort(404)
-            
-        file_path = os.path.join(team_upload_folder, filename)
-        
-        # Check if file exists
-        if not os.path.exists(file_path):
-            print(f"Team member image not found: {file_path}")  # Debug log
-            abort(404)
-            
-        # Determine MIME type
-        mimetype, _ = mimetypes.guess_type(file_path)
-        if not mimetype:
-            mimetype = 'image/png'  # Fallback
-            
-        response = send_file(file_path, mimetype=mimetype)
-        
-        # Add CORS headers for cross-origin requests
-        response.headers['Access-Control-Allow-Origin'] = '*'
-        response.headers['Access-Control-Allow-Methods'] = 'GET'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-        
-        return response
-        
-    except Exception as e:
-        print(f"Error serving team member image {filename}: {str(e)}")
-        abort(404)
+
 
 @route.route('/uploads/team_members/<filename>')
 def serve_team_member_image(filename):
