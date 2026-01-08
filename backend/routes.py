@@ -10,9 +10,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from sqlalchemy.orm import joinedload
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
+
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from functools import wraps
