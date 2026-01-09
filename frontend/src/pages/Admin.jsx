@@ -38,14 +38,14 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-orange-50 font-hindi">
       {/* Admin Header */}
-      <header className="bg-indigo-800 text-white shadow-lg">
+      <header className="bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-lg">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <h1 className="text-2xl font-bold">Hindi Samiti Admin</h1>
           <button
             onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md transition-colors"
+            className="bg-white text-red-600 hover:bg-red-50 px-4 py-2 rounded-md transition-colors font-medium shadow-sm"
           >
             Logout
           </button>
@@ -53,35 +53,35 @@ const Admin = () => {
       </header>
 
       {/* Admin Navigation */}
-      <div className="bg-indigo-700 text-white">
+      <div className="bg-orange-700 text-white shadow-md">
         <div className="container mx-auto px-4">
           <nav className="flex overflow-x-auto">
             <button
-              className={`px-6 py-3 font-medium whitespace-nowrap ${activeTab === 'home' ? 'bg-indigo-900' : 'hover:bg-indigo-800'}`}
+              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'home' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
               onClick={() => setActiveTab('home')}
             >
               Home Content
             </button>
             <button
-              className={`px-6 py-3 font-medium whitespace-nowrap ${activeTab === 'events' ? 'bg-indigo-900' : 'hover:bg-indigo-800'}`}
+              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'events' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
               onClick={() => setActiveTab('events')}
             >
               Events
             </button>
             <button
-              className={`px-6 py-3 font-medium whitespace-nowrap ${activeTab === 'registrations' ? 'bg-indigo-900' : 'hover:bg-indigo-800'}`}
+              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'registrations' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
               onClick={() => setActiveTab('registrations')}
             >
               Registrations
             </button>
             <button
-              className={`px-6 py-3 font-medium whitespace-nowrap ${activeTab === 'team' ? 'bg-indigo-900' : 'hover:bg-indigo-800'}`}
+              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'team' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
               onClick={() => setActiveTab('team')}
             >
               Team
             </button>
             <button
-              className={`px-6 py-3 font-medium whitespace-nowrap ${activeTab === 'blogs' ? 'bg-indigo-900' : 'hover:bg-indigo-800'}`}
+              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'blogs' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
               onClick={() => setActiveTab('blogs')}
             >
               Blogs
@@ -91,12 +91,14 @@ const Admin = () => {
       </div>
 
       {/* Admin Content Area */}
-      <div className="container mx-auto px-4 py-6">
-        {activeTab === 'home' && <HomeContentSection />}
-        {activeTab === 'events' && <EventsSection />}
-        {activeTab === 'registrations' && <RegistrationsSection />}
-        {activeTab === 'team' && <TeamSection />}
-        {activeTab === 'blogs' && <BlogsSection />}
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-white rounded-xl shadow-xl p-6 border-t-4 border-orange-500">
+          {activeTab === 'home' && <HomeContentSection />}
+          {activeTab === 'events' && <EventsSection />}
+          {activeTab === 'registrations' && <RegistrationsSection />}
+          {activeTab === 'team' && <TeamSection />}
+          {activeTab === 'blogs' && <BlogsSection />}
+        </div>
       </div>
     </div>
   );
@@ -204,66 +206,66 @@ const BlogsSection = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Blog Management</h2>
+      <div className="flex justify-between items-center border-b border-orange-100 pb-4">
+        <h2 className="text-2xl font-bold text-orange-900">Blog Management</h2>
         <button
           onClick={handleCreateNew}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+          className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
         >
           Create New Blog
         </button>
       </div>
 
       {message.text && (
-        <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+        <div className={`p-4 rounded-md border ${message.type === 'success' ? 'bg-green-50 text-green-800 border-green-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
           {message.text}
         </div>
       )}
 
       {showForm ? (
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold mb-4">{selectedBlog ? 'Edit Blog' : 'Create Blog'}</h3>
+        <div className="bg-orange-50 p-6 rounded-lg shadow-inner border border-orange-100">
+          <h3 className="text-xl font-semibold mb-4 text-orange-800">{selectedBlog ? 'Edit Blog' : 'Create Blog'}</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700">Title</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
               <input
                 type="text"
                 value={blogForm.title}
                 onChange={(e) => setBlogForm({ ...blogForm, title: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Author</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Author</label>
               <input
                 type="text"
                 value={blogForm.author}
                 onChange={(e) => setBlogForm({ ...blogForm, author: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                 placeholder="Leave blank to use default (Admin)"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Content</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
               <textarea
                 value={blogForm.content}
                 onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 h-64"
+                className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all h-64"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">Cover Image</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Cover Image</label>
               <div className="flex flex-col space-y-2">
                 <input
                   type="text"
                   placeholder="Image URL (optional)"
                   value={blogForm.cover_image_url}
                   onChange={(e) => setBlogForm({ ...blogForm, cover_image_url: e.target.value })}
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                 />
-                <span className="text-gray-500 text-sm">OR Upload File</span>
+                <span className="text-gray-500 text-sm font-medium">OR Upload File</span>
                 <input
                   type="file"
                   accept="image/*"
@@ -272,22 +274,23 @@ const BlogsSection = () => {
                     file:mr-4 file:py-2 file:px-4
                     file:rounded-full file:border-0
                     file:text-sm file:font-semibold
-                    file:bg-indigo-50 file:text-indigo-700
-                    hover:file:bg-indigo-100"
+                    file:bg-orange-100 file:text-orange-700
+                    hover:file:bg-orange-200
+                    cursor-pointer"
                 />
               </div>
             </div>
-            <div className="flex space-x-3">
+            <div className="flex space-x-3 pt-4">
               <button
                 type="submit"
-                className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700"
+                className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-2 rounded-md hover:from-orange-700 hover:to-red-700 shadow-md transition-all"
               >
                 {selectedBlog ? 'Update' : 'Create'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300"
+                className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-50 transition-all shadow-sm"
               >
                 Cancel
               </button>
@@ -295,33 +298,33 @@ const BlogsSection = () => {
           </form>
         </div>
       ) : (
-        <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="bg-white shadow-md rounded-lg overflow-hidden border border-orange-100">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-orange-100">
+              <thead className="bg-orange-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">Title</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">Author</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">Date</th>
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-orange-100">
                 {blogs.map((blog) => (
-                  <tr key={blog.id}>
+                  <tr key={blog.id} className="hover:bg-orange-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{blog.title}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{blog.author}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(blog.created_at).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => handleEdit(blog)}
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-orange-600 hover:text-orange-900 bg-orange-50 px-3 py-1 rounded-md hover:bg-orange-100 transition-colors"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(blog.id)}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-red-600 hover:text-red-900 bg-red-50 px-3 py-1 rounded-md hover:bg-red-100 transition-colors"
                       >
                         Delete
                       </button>
@@ -421,24 +424,24 @@ const RegistrationsSection = () => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Registration Management</h2>
+      <h2 className="text-2xl font-bold text-orange-900 border-b border-orange-100 pb-2">Registration Management</h2>
 
       {message.text && (
-        <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+        <div className={`p-4 rounded-md border ${message.type === 'success' ? 'bg-green-50 text-green-800 border-green-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
           {message.text}
         </div>
       )}
 
-      <div className="bg-white p-6 rounded-lg shadow-md">
+      <div className="bg-orange-50 p-6 rounded-lg shadow-inner border border-orange-100">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
-          <div className="mb-4 md:mb-0">
+          <div className="mb-4 md:mb-0 w-full md:w-1/3">
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Select Event
             </label>
             <select
               value={selectedEventId}
               onChange={handleEventChange}
-              className="rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className="w-full p-2 border border-orange-200 rounded-md shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 outline-none transition-all"
             >
               {events.map(event => (
                 <option key={event.id} value={event.id}>{event.name}</option>
@@ -449,7 +452,7 @@ const RegistrationsSection = () => {
           {selectedEventId && (
             <button
               onClick={handleDownloadExcel}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              className="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-full shadow-md text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all transform hover:-translate-y-0.5"
             >
               Download Excel
             </button>
@@ -457,45 +460,51 @@ const RegistrationsSection = () => {
         </div>
 
         {isLoading ? (
-          <div className="text-center py-6">Loading registrations...</div>
+          <div className="text-center py-10 flex flex-col items-center justify-center text-orange-600">
+            <svg className="animate-spin h-8 w-8 mb-4 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p>Loading registrations...</p>
+          </div>
         ) : registrations.length > 0 ? (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+          <div className="overflow-x-auto bg-white rounded-lg shadow-sm border border-orange-100">
+            <table className="min-w-full divide-y divide-orange-100">
+              <thead className="bg-orange-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">
                     Timestamp
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">
                     Payment Screenshot
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-orange-100">
                 {registrations.map((registration) => (
-                  <tr key={registration.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <tr key={registration.id} className="hover:bg-orange-50 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
                       {registration.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {new Date(registration.timestamp).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                      <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full shadow-sm
                         ${registration.status === 'verified'
-                          ? 'bg-green-100 text-green-800'
+                          ? 'bg-green-100 text-green-800 border border-green-200'
                           : registration.status === 'rejected'
-                            ? 'bg-red-100 text-red-800'
-                            : 'bg-yellow-100 text-yellow-800'
+                            ? 'bg-red-100 text-red-800 border border-red-200'
+                            : 'bg-yellow-100 text-yellow-800 border border-yellow-200'
                         }`}>
                         {registration.status.charAt(0).toUpperCase() + registration.status.slice(1)}
                       </span>
@@ -504,7 +513,7 @@ const RegistrationsSection = () => {
                       {registration.screenshot_url && (
                         <button
                           onClick={() => handleViewScreenshot(registration.id)}
-                          className="text-indigo-600 hover:text-indigo-900"
+                          className="text-orange-600 hover:text-orange-900 font-medium underline"
                         >
                           View Screenshot
                         </button>
@@ -515,9 +524,9 @@ const RegistrationsSection = () => {
                         <button
                           onClick={() => handleStatusChange(registration.id, 'verified')}
                           disabled={registration.status === 'verified'}
-                          className={`px-2 py-1 rounded-md ${registration.status === 'verified'
+                          className={`px-3 py-1 rounded-md transition-all ${registration.status === 'verified'
                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-green-100 text-green-800 hover:bg-green-200'
+                            : 'bg-green-50 text-green-700 hover:bg-green-100 border border-green-200 shadow-sm'
                             }`}
                         >
                           Verify
@@ -526,9 +535,9 @@ const RegistrationsSection = () => {
                         <button
                           onClick={() => handleStatusChange(registration.id, 'rejected')}
                           disabled={registration.status === 'rejected'}
-                          className={`px-2 py-1 rounded-md ${registration.status === 'rejected'
+                          className={`px-3 py-1 rounded-md transition-all ${registration.status === 'rejected'
                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-red-100 text-red-800 hover:bg-red-200'
+                            : 'bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 shadow-sm'
                             }`}
                         >
                           Reject
@@ -537,12 +546,12 @@ const RegistrationsSection = () => {
                         <button
                           onClick={() => handleStatusChange(registration.id, 'pending')}
                           disabled={registration.status === 'pending'}
-                          className={`px-2 py-1 rounded-md ${registration.status === 'pending'
+                          className={`px-3 py-1 rounded-md transition-all ${registration.status === 'pending'
                             ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
+                            : 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100 border border-yellow-200 shadow-sm'
                             }`}
                         >
-                          Mark Pending
+                          Pending
                         </button>
                       </div>
                     </td>
@@ -552,8 +561,11 @@ const RegistrationsSection = () => {
             </table>
           </div>
         ) : (
-          <div className="text-center py-6 text-gray-500">
-            No registrations found for this event.
+          <div className="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 011.414.293l5.414 5.414a1 1 0 01.293 1.414V19a2 2 0 01-2 2z" />
+            </svg>
+            <p className="text-gray-500 font-medium">No registrations found for this event.</p>
           </div>
         )}
       </div>
@@ -631,34 +643,34 @@ const HomeContentSection = () => {
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl font-bold border-b pb-2">Home Page Content</h2>
+      <h2 className="text-2xl font-bold border-b border-orange-200 pb-2 text-orange-900">Home Page Content</h2>
 
       {message.text && (
-        <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+        <div className={`p-4 rounded-md border ${message.type === 'success' ? 'bg-green-50 text-green-800 border-green-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
           {message.text}
         </div>
       )}
 
       {/* Intro Section */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-xl font-semibold mb-4">Club Introduction</h3>
+      <div className="bg-orange-50 p-6 rounded-lg shadow-inner border border-orange-100">
+        <h3 className="text-xl font-semibold mb-4 text-orange-800">Club Introduction</h3>
         <textarea
           value={intro}
           onChange={(e) => setIntro(e.target.value)}
-          className="w-full h-40 p-3 border rounded-md"
+          className="w-full h-40 p-3 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
           placeholder="Write club introduction here..."
         ></textarea>
         <button
           onClick={handleIntroSave}
-          className="mt-3 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md"
+          className="mt-4 bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-2 rounded-md hover:from-orange-700 hover:to-red-700 shadow-md transition-all"
         >
           Save Introduction
         </button>
       </div>
 
       {/* Image Management */}
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-xl font-semibold mb-4">Carousel Images</h3>
+      <div className="bg-orange-50 p-6 rounded-lg shadow-inner border border-orange-100">
+        <h3 className="text-xl font-semibold mb-4 text-orange-800">Carousel Images</h3>
 
         {/* Upload Form */}
         <form onSubmit={handleImageUpload} className="mb-6">
@@ -667,11 +679,17 @@ const HomeContentSection = () => {
               type="file"
               accept="image/*"
               onChange={(e) => setNewImage(e.target.files[0])}
-              className="flex-1"
+              className="flex-1 text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-orange-100 file:text-orange-700
+                hover:file:bg-orange-200
+                cursor-pointer"
             />
             <button
               type="submit"
-              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+              className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-2 rounded-md shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={!newImage}
             >
               Upload
@@ -682,22 +700,24 @@ const HomeContentSection = () => {
         {/* Images Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {images.map((img) => (
-            <div key={img.id} className="relative group">
+            <div key={img.id} className="relative group overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-all">
               <img
                 src={img.url}
                 alt={img.caption || 'Carousel image'}
-                className="w-full h-40 object-cover rounded-md"
+                className="w-full h-40 object-cover transform group-hover:scale-110 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center">
                 <button
                   onClick={() => handleImageDelete(img.id)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md"
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all transform translate-y-4 group-hover:translate-y-0"
                 >
                   Delete
                 </button>
               </div>
               {img.caption && (
-                <p className="mt-1 text-sm text-gray-600 truncate">{img.caption}</p>
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 p-2">
+                  <p className="text-white text-xs truncate">{img.caption}</p>
+                </div>
               )}
             </div>
           ))}
@@ -915,26 +935,26 @@ const EventsSection = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Events Management</h2>
+      <div className="flex justify-between items-center border-b border-orange-100 pb-4">
+        <h2 className="text-2xl font-bold text-orange-900">Events Management</h2>
         <button
           onClick={handleCreateNew}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+          className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
         >
           Create New Event
         </button>
       </div>
 
       {message.text && (
-        <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+        <div className={`p-4 rounded-md border ${message.type === 'success' ? 'bg-green-50 text-green-800 border-green-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
           {message.text}
         </div>
       )}
 
       {showForm ? (
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-orange-50 p-6 rounded-lg shadow-inner border border-orange-100">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <h3 className="text-xl font-semibold border-b pb-2">
+            <h3 className="text-xl font-semibold border-b border-orange-200 pb-2 text-orange-900">
               {selectedEvent ? 'Edit Event' : 'Create New Event'}
             </h3>
 
@@ -947,7 +967,7 @@ const EventsSection = () => {
               {/* Image Preview */}
               <div className="mb-4">
                 {coverImagePreview ? (
-                  <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-gray-300">
+                  <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-orange-200 shadow-sm">
                     <img
                       src={coverImagePreview}
                       alt="Cover Preview"
@@ -960,15 +980,15 @@ const EventsSection = () => {
                         setCoverImageFile(null);
                         setEventForm({ ...eventForm, cover_image_url: '' });
                       }}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg hover:bg-red-600"
+                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg hover:bg-red-600 shadow-md transition-all"
                     >
                       ×
                     </button>
                   </div>
                 ) : (
-                  <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center border-2 border-dashed border-gray-300">
+                  <div className="w-full h-48 bg-white rounded-lg flex items-center justify-center border-2 border-dashed border-orange-200">
                     <div className="text-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
                       <p className="mt-2 text-sm text-gray-500">No cover image selected</p>
@@ -979,7 +999,7 @@ const EventsSection = () => {
 
               {/* File Input */}
               <div className="flex items-center justify-center">
-                <label className="cursor-pointer bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2 rounded-md border border-indigo-300">
+                <label className="cursor-pointer bg-orange-100 hover:bg-orange-200 text-orange-800 px-6 py-2 rounded-md border border-orange-200 shadow-sm transition-all">
                   <span>{coverImageFile ? 'Change Cover Image' : 'Select Cover Image'}</span>
                   <input
                     type="file"
@@ -1009,7 +1029,7 @@ const EventsSection = () => {
                   value={eventForm.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
 
@@ -1023,7 +1043,7 @@ const EventsSection = () => {
                   value={eventForm.date}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-2 border rounded-md"
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
             </div>
@@ -1037,45 +1057,45 @@ const EventsSection = () => {
                 value={eventForm.description}
                 onChange={handleInputChange}
                 rows="4"
-                className="w-full p-2 border rounded-md"
+                className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
               ></textarea>
             </div>
 
-            <div className="flex items-center">
+            <div className="flex items-center p-3 bg-white rounded-md border border-orange-100">
               <input
                 type="checkbox"
                 name="is_active"
                 checked={eventForm.is_active}
                 onChange={handleInputChange}
                 id="is_active"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                className="h-5 w-5 text-orange-600 focus:ring-orange-500 border-gray-300 rounded cursor-pointer"
               />
-              <label htmlFor="is_active" className="ml-2 block text-sm text-gray-700">
+              <label htmlFor="is_active" className="ml-2 block text-sm font-medium text-gray-700 cursor-pointer select-none">
                 Event is active (registrations open)
               </label>
             </div>
 
             {/* Registration Form Fields */}
             <div>
-              <div className="flex justify-between items-center mb-4">
-                <h4 className="text-lg font-medium">Registration Form Fields</h4>
+              <div className="flex justify-between items-center mb-4 border-b border-orange-200 pb-2">
+                <h4 className="text-lg font-medium text-orange-900">Registration Form Fields</h4>
                 <button
                   type="button"
                   onClick={addFormField}
-                  className="text-indigo-600 hover:text-indigo-800"
+                  className="text-orange-600 hover:text-orange-800 font-medium flex items-center"
                 >
-                  + Add Field
+                  <span className="text-xl mr-1">+</span> Add Field
                 </button>
               </div>
 
               {eventForm.formFields.map((field, index) => (
-                <div key={index} className="border rounded-md p-4 mb-4 bg-gray-50">
+                <div key={index} className="border border-orange-200 rounded-md p-4 mb-4 bg-white shadow-sm relative">
                   <div className="flex justify-between mb-2">
-                    <h5 className="font-medium">Field #{index + 1}</h5>
+                    <h5 className="font-medium text-gray-700 bg-orange-50 px-2 py-0.5 rounded text-sm">Field #{index + 1}</h5>
                     <button
                       type="button"
                       onClick={() => removeFormField(index)}
-                      className="text-red-600 hover:text-red-800 text-sm"
+                      className="text-red-500 hover:text-red-700 text-sm font-medium"
                     >
                       Remove
                     </button>
@@ -1091,7 +1111,7 @@ const EventsSection = () => {
                         value={field.label}
                         onChange={(e) => handleFormFieldChange(index, 'label', e.target.value)}
                         required
-                        className="w-full p-2 border rounded-md"
+                        className="w-full p-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                       />
                     </div>
 
@@ -1102,7 +1122,7 @@ const EventsSection = () => {
                       <select
                         value={field.field_type}
                         onChange={(e) => handleFormFieldChange(index, 'field_type', e.target.value)}
-                        className="w-full p-2 border rounded-md"
+                        className="w-full p-2 border border-gray-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                       >
                         <option value="text">Text</option>
                         <option value="number">Number</option>
@@ -1111,15 +1131,15 @@ const EventsSection = () => {
                       </select>
                     </div>
 
-                    <div className="flex items-center">
+                    <div className="flex items-center h-full pt-6">
                       <input
                         type="checkbox"
                         id={`required-${index}`}
                         checked={field.is_required}
                         onChange={(e) => handleFormFieldChange(index, 'is_required', e.target.checked)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                        className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                       />
-                      <label htmlFor={`required-${index}`} className="ml-2 block text-sm text-gray-700">
+                      <label htmlFor={`required-${index}`} className="ml-2 block text-sm text-gray-700 select-none cursor-pointer">
                         Required Field
                       </label>
                     </div>
@@ -1129,11 +1149,11 @@ const EventsSection = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-3 pt-4 border-t border-orange-100">
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md"
+                className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-50 transition-all shadow-sm"
               >
                 Cancel
               </button>
@@ -1142,7 +1162,7 @@ const EventsSection = () => {
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
+                  className="bg-white border border-red-200 text-red-600 px-6 py-2 rounded-md hover:bg-red-50 transition-all shadow-sm"
                 >
                   Delete
                 </button>
@@ -1151,7 +1171,7 @@ const EventsSection = () => {
               <button
                 type="submit"
                 disabled={isUploadingCover}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-2 rounded-md hover:from-orange-700 hover:to-red-700 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isUploadingCover ? 'Uploading...' : (selectedEvent ? 'Update' : 'Create')} Event
               </button>
@@ -1159,28 +1179,28 @@ const EventsSection = () => {
           </form>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-orange-100">
+          <table className="min-w-full divide-y divide-orange-100">
+            <thead className="bg-orange-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">
                   Name
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-bold text-orange-800 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-right text-xs font-bold text-orange-800 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-orange-100">
               {events.length > 0 ? (
                 events.map((event) => (
-                  <tr key={event.id} className="hover:bg-gray-50">
+                  <tr key={event.id} className="hover:bg-orange-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{event.name}</div>
                     </td>
@@ -1191,8 +1211,8 @@ const EventsSection = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${event.is_active
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-800'
+                        ? 'bg-green-100 text-green-800 border border-green-200'
+                        : 'bg-gray-100 text-gray-800 border border-gray-200'
                         }`}>
                         {event.is_active ? 'Active' : 'Inactive'}
                       </span>
@@ -1200,7 +1220,7 @@ const EventsSection = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleSelectEvent(event)}
-                        className="text-indigo-600 hover:text-indigo-900"
+                        className="text-orange-600 hover:text-orange-900 bg-orange-50 px-3 py-1 rounded-md hover:bg-orange-100 transition-colors"
                       >
                         Edit
                       </button>
@@ -1209,7 +1229,7 @@ const EventsSection = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="4" className="px-6 py-4 text-center text-sm text-gray-500">
+                  <td colSpan="4" className="px-6 py-12 text-center text-sm text-gray-500">
                     No events found. Create your first event!
                   </td>
                 </tr>
@@ -1401,32 +1421,32 @@ const TeamSection = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Team Management</h2>
+      <div className="flex justify-between items-center border-b border-orange-100 pb-4">
+        <h2 className="text-2xl font-bold text-orange-900">Team Management</h2>
         <button
           onClick={handleCreateNew}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md"
+          className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
         >
           Add New Member
         </button>
       </div>
 
       {message.text && (
-        <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+        <div className={`p-4 rounded-md border ${message.type === 'success' ? 'bg-green-50 text-green-800 border-green-200' : 'bg-red-50 text-red-800 border-red-200'}`}>
           {message.text}
         </div>
       )}
 
       {/* Debug Panel */}
-      <div className="bg-blue-100 border border-blue-300 rounded-lg p-4">
-        <h3 className="font-semibold mb-2">🛠️ Admin Team Debug Info:</h3>
-        <div className="text-sm">
+      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 shadow-inner">
+        <h3 className="font-semibold mb-2 text-orange-800">🛠️ Admin Team Debug Info:</h3>
+        <div className="text-sm text-gray-700">
           <p>• Total members loaded: {teamMembers.length}</p>
           <p>• Members with images: {teamMembers.filter(m => m.image_url).length}</p>
           <p>• Members without images: {teamMembers.filter(m => !m.image_url).length}</p>
           <details className="mt-2">
-            <summary className="cursor-pointer">Raw API Data</summary>
-            <pre className="mt-2 bg-white p-2 rounded text-xs overflow-auto max-h-40">
+            <summary className="cursor-pointer text-orange-600 hover:text-orange-800">Raw API Data</summary>
+            <pre className="mt-2 bg-white p-2 rounded text-xs overflow-auto max-h-40 border border-orange-100">
               {JSON.stringify(teamMembers, null, 2)}
             </pre>
           </details>
@@ -1434,9 +1454,9 @@ const TeamSection = () => {
       </div>
 
       {showForm ? (
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-orange-50 p-6 rounded-lg shadow-inner border border-orange-100">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <h3 className="text-xl font-semibold border-b pb-2">
+            <h3 className="text-xl font-semibold border-b border-orange-200 pb-2 text-orange-900">
               {selectedMember ? 'Edit Team Member' : 'Add New Team Member'}
             </h3>
 
@@ -1453,7 +1473,7 @@ const TeamSection = () => {
                     <img
                       src={imagePreview}
                       alt="Preview"
-                      className="w-full h-full object-cover rounded-full border-4 border-orange-500"
+                      className="w-full h-full object-cover rounded-full border-4 border-orange-500 shadow-md"
                     />
                     <button
                       type="button"
@@ -1462,14 +1482,14 @@ const TeamSection = () => {
                         setImageFile(null);
                         setMemberForm({ ...memberForm, image_url: '' });
                       }}
-                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm hover:bg-red-600"
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-lg hover:bg-red-600 shadow-sm"
                     >
                       ×
                     </button>
                   </div>
                 ) : (
-                  <div className="w-32 h-32 mx-auto bg-gray-200 rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-32 h-32 mx-auto bg-white border-2 border-dashed border-orange-200 rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-orange-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
@@ -1478,7 +1498,7 @@ const TeamSection = () => {
 
               {/* File Input */}
               <div className="flex items-center justify-center">
-                <label className="cursor-pointer bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2 rounded-md border border-indigo-300">
+                <label className="cursor-pointer bg-orange-100 hover:bg-orange-200 text-orange-800 px-6 py-2 rounded-md border border-orange-200 shadow-sm transition-all">
                   <span>{imageFile ? 'Change Image' : 'Select Image'}</span>
                   <input
                     type="file"
@@ -1507,7 +1527,7 @@ const TeamSection = () => {
                   value={memberForm.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                 />
               </div>
 
@@ -1521,7 +1541,7 @@ const TeamSection = () => {
                   value={memberForm.role}
                   onChange={handleInputChange}
                   required
-                  className="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                   placeholder="e.g. President, Designer, Faculty Coordinator"
                 />
               </div>
@@ -1536,17 +1556,17 @@ const TeamSection = () => {
                 value={memberForm.description}
                 onChange={handleInputChange}
                 rows="4"
-                className="w-full p-2 border rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                 placeholder="Brief description or bio of the team member"
               ></textarea>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-3 pt-4 border-t border-orange-100">
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md"
+                className="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-md hover:bg-gray-50 transition-all shadow-sm"
               >
                 Cancel
               </button>
@@ -1555,7 +1575,7 @@ const TeamSection = () => {
                 <button
                   type="button"
                   onClick={handleDelete}
-                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
+                  className="bg-white border border-red-200 text-red-600 px-6 py-2 rounded-md hover:bg-red-50 transition-all shadow-sm"
                 >
                   Remove Member
                 </button>
@@ -1564,7 +1584,7 @@ const TeamSection = () => {
               <button
                 type="submit"
                 disabled={isUploadingImage}
-                className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-2 rounded-md hover:from-orange-700 hover:to-red-700 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isUploadingImage ? 'Uploading...' : (selectedMember ? 'Update Member' : 'Add Member')}
               </button>
@@ -1577,40 +1597,46 @@ const TeamSection = () => {
             teamMembers.map((member) => (
               <div
                 key={member.id}
-                className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+                className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all transform hover:-translate-y-1 border border-orange-100 group"
                 onClick={() => handleSelectMember(member)}
               >
-                <div className="h-48 bg-gray-200 flex items-center justify-center">
+                <div className="h-48 bg-gray-100 flex items-center justify-center relative overflow-hidden">
                   {member.image_url ? (
                     <img
                       src={member.image_url}
                       alt={member.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'flex';
                       }}
                     />
                   ) : null}
-                  <div className="text-gray-400 flex flex-col items-center" style={{ display: member.image_url ? 'none' : 'flex' }}>
+                  <div className="text-orange-300 flex flex-col items-center" style={{ display: member.image_url ? 'none' : 'flex' }}>
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                    <p className="mt-2">No Image</p>
+                    <p className="mt-2 font-medium">No Image</p>
+                  </div>
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+                    <span className="bg-white/90 text-orange-800 px-3 py-1 rounded-full text-sm font-medium opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">Edit</span>
                   </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-medium text-gray-900">{member.name}</h3>
-                  <p className="text-sm text-indigo-600">{member.role}</p>
+                <div className="p-4 bg-gradient-to-br from-white to-orange-50">
+                  <h3 className="font-bold text-lg text-gray-900 truncate">{member.name}</h3>
+                  <p className="text-orange-600 font-medium truncate">{member.role}</p>
                   {member.description && (
-                    <p className="mt-2 text-sm text-gray-500 line-clamp-3">{member.description}</p>
+                    <p className="mt-2 text-sm text-gray-500 line-clamp-3 leading-relaxed">{member.description}</p>
                   )}
                 </div>
               </div>
             ))
           ) : (
-            <div className="col-span-full text-center py-10 text-gray-500">
-              No team members found. Add your first team member!
+            <div className="col-span-full text-center py-12 bg-white rounded-lg border border-dashed border-gray-300">
+              <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-12 w-12 text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <p className="text-gray-500 font-medium">No team members found. Add your first team member!</p>
             </div>
           )}
         </div>
