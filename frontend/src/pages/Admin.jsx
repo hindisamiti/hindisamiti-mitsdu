@@ -820,6 +820,7 @@ const EventsSection = () => {
     }
   };
 
+
   // NEW: Upload cover image
   const uploadCoverImage = async () => {
     if (!coverImageFile) return null;
@@ -829,7 +830,8 @@ const EventsSection = () => {
       const formData = new FormData();
       formData.append('image', coverImageFile);
 
-      const response = await fetch('/api/admin/events/upload-cover-image', {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+      const response = await fetch(`${API_BASE_URL}/api/admin/events/upload-cover-image`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -838,13 +840,15 @@ const EventsSection = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to upload cover image');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to upload cover image');
       }
 
       const result = await response.json();
       return result.image_url;
     } catch (error) {
-      throw new Error('Failed to upload cover image: ' + error.message);
+      console.error("Cover upload error:", error);
+      throw new Error(error.message || 'Failed to upload cover image');
     } finally {
       setIsUploadingCover(false);
     }
@@ -907,8 +911,9 @@ const EventsSection = () => {
       loadEvents();
       setShowForm(false);
     } catch (error) {
+      console.error("Event submit error:", error);
       setMessage({
-        text: selectedEvent ? 'Failed to update event' : 'Failed to create event',
+        text: error.message || (selectedEvent ? 'Failed to update event' : 'Failed to create event'),
         type: 'error'
       });
     }
