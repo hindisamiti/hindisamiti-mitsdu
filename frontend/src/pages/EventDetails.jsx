@@ -204,7 +204,7 @@ const EventDetails = () => {
 
               {/* Event Image Header */}
               {event.cover_image_url && (
-                <div className="relative h-64 sm:h-80">
+                <div className="relative aspect-[4/5] w-full max-w-2xl mx-auto">
                   <img
                     src={event.cover_image_url}
                     alt={event.name}

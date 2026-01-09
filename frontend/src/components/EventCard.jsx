@@ -32,11 +32,11 @@ const EventCard = ({ event, onClick }) => {
       onClick={onClick}
     >
       {/* Card Container */}
-      <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
+      <div className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-lg group-hover:shadow-2xl transition-shadow duration-300">
         {/* Background Image */}
         {event.cover_image_url ? (
-          <img 
-            src={event.cover_image_url} 
+          <img
+            src={event.cover_image_url}
             alt={event.name}
             className="w-full h-full object-cover"
           />
@@ -51,7 +51,7 @@ const EventCard = ({ event, onClick }) => {
 
         {/* Orange Border Frame */}
         <div className="absolute inset-0 border-4 border-orange-500 rounded-2xl pointer-events-none group-hover:border-orange-400 transition-colors duration-300"></div>
-        
+
         {/* Corner Decorations */}
         <div className="absolute top-4 left-4 w-8 h-8 border-t-4 border-l-4 border-orange-400 rounded-tl-lg group-hover:border-amber-400 transition-colors"></div>
         <div className="absolute top-4 right-4 w-8 h-8 border-t-4 border-r-4 border-orange-400 rounded-tr-lg group-hover:border-amber-400 transition-colors"></div>

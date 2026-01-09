@@ -29,40 +29,12 @@ const EventsSection = () => {
   }, []);
 
   const handleEventClick = (eventId) => {
-    navigate(`/events/${eventId}`, { 
-      state: { from: 'home' } 
+    navigate(`/events/${eventId}`, {
+      state: { from: 'home' }
     });
   };
 
-  // Sample events for fallback
-  const sampleEvents = [
-    {
-      id: 1,
-      name: 'कवि सम्मेलन',
-      date: '2025-06-15',
-      description: 'An evening of Hindi poetry featuring renowned poets and student performances.',
-      is_active: true,
-      cover_image_url: 'https://via.placeholder.com/400x400/1a1a1a/FFD700?text=Kavi+Sammelan'
-    },
-    {
-      id: 2,
-      name: 'अभिव्यक्ति गायन',
-      date: '2025-09-14',
-      description: 'Join us for a day-long celebration of Hindi language with competitions and cultural performances.',
-      is_active: true,
-      cover_image_url: 'https://via.placeholder.com/400x400/1a1a1a/FFD700?text=Abhivyakti'
-    },
-    {
-      id: 3,
-      name: 'चक्रव्यूह',
-      date: '2025-07-25',
-      description: 'A theatrical festival showcasing Hindi dramas and plays performed by students.',
-      is_active: true,
-      cover_image_url: 'https://via.placeholder.com/400x400/1a1a1a/FFD700?text=Chakravyuh'
-    }
-  ];
-
-  const displayEvents = events.length > 0 ? events : (error ? sampleEvents : []);
+  const displayEvents = events;
 
   return (
     <section id="events" className="relative py-16 sm:py-20 md:py-24 lg:py-28 overflow-hidden">
@@ -92,7 +64,7 @@ const EventsSection = () => {
             </span>
             <div className="h-1 bg-orange-900 rounded-full mt-2"></div>
           </div>
-          
+
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -130,7 +102,7 @@ const EventsSection = () => {
                 </div>
               </motion.div>
             )}
-            
+
             {/* Events Grid - 4 columns on desktop */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 mb-12 sm:mb-16">
               {displayEvents.slice(0, 8).map((event, index) => (
@@ -142,14 +114,14 @@ const EventsSection = () => {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   className="h-full"
                 >
-                  <EventCard 
-                    event={event} 
+                  <EventCard
+                    event={event}
                     onClick={() => handleEventClick(event.id)}
                   />
                 </motion.div>
               ))}
             </div>
-            
+
             {/* View All Button */}
             {displayEvents.length > 8 && (
               <motion.div
@@ -178,7 +150,7 @@ const EventsSection = () => {
       {/* Bottom decorative wave */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-          <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" fill="#fff6e6" fillOpacity="0.5"/>
+          <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,58.7C960,64,1056,64,1152,58.7C1248,53,1344,43,1392,37.3L1440,32L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" fill="#fff6e6" fillOpacity="0.5" />
         </svg>
       </div>
     </section>
