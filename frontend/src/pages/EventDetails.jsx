@@ -241,52 +241,6 @@ const EventDetails = () => {
                   </div>
                 </div>
 
-                {/* Coordinator Contact Info - NEW */}
-                {(event.coordinator1_name || event.coordinator2_name) && (
-                  <div className="flex flex-col items-center mb-8">
-                    <h3 className="text-xl font-semibold text-orange-900 mb-3 border-b-2 border-orange-200 pb-1">
-                      Event Coordinators
-                    </h3>
-                    <div className="flex flex-wrap justify-center gap-6">
-                      {event.coordinator1_name && (
-                        <div className="bg-white border border-orange-200 rounded-lg p-3 shadow-sm flex items-center gap-3">
-                          <div className="bg-orange-100 p-2 rounded-full text-orange-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                            </svg>
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{event.coordinator1_name}</p>
-                            {event.coordinator1_phone && (
-                              <a href={`tel:${event.coordinator1_phone}`} className="text-sm text-orange-600 hover:underline">
-                                {event.coordinator1_phone}
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      )}
-
-                      {event.coordinator2_name && (
-                        <div className="bg-white border border-orange-200 rounded-lg p-3 shadow-sm flex items-center gap-3">
-                          <div className="bg-orange-100 p-2 rounded-full text-orange-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                            </svg>
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{event.coordinator2_name}</p>
-                            {event.coordinator2_phone && (
-                              <a href={`tel:${event.coordinator2_phone}`} className="text-sm text-orange-600 hover:underline">
-                                {event.coordinator2_phone}
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
                 {/* Registration Section */}
                 {registrationOpen ? (
                   <motion.div
