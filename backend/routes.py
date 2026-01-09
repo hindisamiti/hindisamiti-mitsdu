@@ -596,67 +596,6 @@ def create_event(current_admin):
         traceback.print_exc()
         return jsonify({'message': str(e)}), 500
 
-@route.route('/api/admin/events/upload-cover-image', methods=['POST'])
-@token_required
-def upload_event_cover_image(current_admin):
-    try:
-        print("📤 UPLOAD: Received event cover image upload request")
-        
-        if 'image' not in request.files:
-            return jsonify({'message': 'No image file provided'}), 400
-        
-        file = request.files['image']
-        
-        if file.filename == '':
-            return jsonify({'message': 'No file selected'}), 400
-            
-        print(f"📎 UPLOAD: Processing file {file.filename}")
-        
-        # Try Cloudinary upload
-        cloudinary_url = upload_image(file, folder="hindi_samiti/events")
-        
-        if cloudinary_url:
-            print(f"✅ UPLOAD: Uploaded to Cloudinary: {cloudinary_url}")
-            return jsonify({
-                'success': True,
-                'image_url': cloudinary_url,
-                'filename': file.filename
-            }), 200
-            
-        # Fallback to local storage
-        if file and allowed_file(file.filename):
-            print("📁 UPLOAD: Cloudinary failed, using local storage")
-            
-            # Create events upload directory
-            upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
-            events_folder = os.path.join(upload_folder, 'event_covers')
-            os.makedirs(events_folder, exist_ok=True)
-            
-            # Generate unique filename
-            filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
-            filepath = os.path.join(events_folder, filename)
-            
-            # Reset file pointer
-            file.seek(0)
-            file.save(filepath)
-            
-            # Return the image URL
-            image_url = f'/uploads/event_covers/{filename}'
-            print(f"🔗 UPLOAD: Returning URL: {image_url}")
-            
-            return jsonify({
-                'success': True,
-                'image_url': image_url,
-                'filename': filename
-            }), 200
-        else:
-            return jsonify({'message': 'Invalid file type'}), 400
-            
-    except Exception as e:
-        print(f"❌ UPLOAD ERROR: {str(e)}")
-        import traceback
-        traceback.print_exc()
-        return jsonify({'message': str(e)}), 500
 
 @route.route('/api/admin/events/<int:event_id>', methods=['PUT'])
 @token_required
