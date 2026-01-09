@@ -163,6 +163,10 @@ def get_public_events():
                 'date': event.date.isoformat(),
                 'description': event.description,
                 'cover_image_url': event.cover_image_url,
+                'coordinator1_name': event.coordinator1_name,
+                'coordinator1_phone': event.coordinator1_phone,
+                'coordinator2_name': event.coordinator2_name,
+                'coordinator2_phone': event.coordinator2_phone,
                 'is_active': event.is_active
             }
             
@@ -212,6 +216,10 @@ def get_public_event_details(event_id):
             'date': event.date.isoformat(),
             'description': event.description,
             'cover_image_url': event.cover_image_url,
+            'coordinator1_name': event.coordinator1_name,
+            'coordinator1_phone': event.coordinator1_phone,
+            'coordinator2_name': event.coordinator2_name,
+            'coordinator2_phone': event.coordinator2_phone,
             'form_fields': sorted(form_fields, key=lambda x: x['order']),
             'is_active': event.is_active
         }
@@ -533,6 +541,10 @@ def get_events(current_admin):
                 'description': event.description,
                 'is_active': event.is_active,
                 'cover_image_url': event.cover_image_url,  # Send exactly what's in DB
+                'coordinator1_name': event.coordinator1_name,
+                'coordinator1_phone': event.coordinator1_phone,
+                'coordinator2_name': event.coordinator2_name,
+                'coordinator2_phone': event.coordinator2_phone,
                 'form_fields': sorted(form_fields, key=lambda x: x['order'])
             })
         
@@ -560,7 +572,11 @@ def create_event(current_admin):
             date=datetime.strptime(data['date'], '%Y-%m-%d').date(),
             description=data.get('description', ''),
             is_active=data.get('is_active', True),
-            cover_image_url=cover_image_url  # THIS MUST BE SET
+            cover_image_url=cover_image_url,  # THIS MUST BE SET
+            coordinator1_name=data.get('coordinator1_name'),
+            coordinator1_phone=data.get('coordinator1_phone'),
+            coordinator2_name=data.get('coordinator2_name'),
+            coordinator2_phone=data.get('coordinator2_phone')
         )
         
         db.session.add(event)
@@ -611,6 +627,12 @@ def update_event(current_admin, event_id):
         event.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
         event.description = data.get('description', '')
         event.is_active = data.get('is_active', True)
+        
+        # Update coordinator details
+        event.coordinator1_name = data.get('coordinator1_name')
+        event.coordinator1_phone = data.get('coordinator1_phone')
+        event.coordinator2_name = data.get('coordinator2_name')
+        event.coordinator2_phone = data.get('coordinator2_phone')
         
         # IMPORTANT: Update cover_image_url if provided
         if 'cover_image_url' in data:

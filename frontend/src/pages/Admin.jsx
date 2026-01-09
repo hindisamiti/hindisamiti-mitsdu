@@ -1053,6 +1053,68 @@ const EventsSection = () => {
               </div>
             </div>
 
+            {/* Coordinator Details - NEW */}
+            <div className="bg-orange-50 p-4 rounded-md border border-orange-100">
+              <h4 className="text-lg font-medium text-orange-900 mb-4 border-b border-orange-200 pb-2">Coordinator Details</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Coordinator 1 Name
+                  </label>
+                  <input
+                    type="text"
+                    name="coordinator1_name"
+                    value={eventForm.coordinator1_name || ''}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                    placeholder="e.g. John Doe"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Coordinator 1 Phone
+                  </label>
+                  <input
+                    type="text"
+                    name="coordinator1_phone"
+                    value={eventForm.coordinator1_phone || ''}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                    placeholder="e.g. +91 98765 43210"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Coordinator 2 Name (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="coordinator2_name"
+                    value={eventForm.coordinator2_name || ''}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                    placeholder="e.g. Jane Smith"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Coordinator 2 Phone (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    name="coordinator2_phone"
+                    value={eventForm.coordinator2_phone || ''}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                    placeholder="e.g. +91 98765 43210"
+                  />
+                </div>
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description

@@ -30,6 +30,11 @@ class Event(db.Model):
     description = Column(Text)
     is_active = Column(Boolean, default=True)
     cover_image_url = Column(String(255))
+    coordinator1_name = Column(String(100))
+    coordinator1_phone = Column(String(20))
+    coordinator2_name = Column(String(100))
+    coordinator2_phone = Column(String(20))
+
     registrations = relationship('Registration', back_populates='event')
     form_fields = relationship('EventFormField', back_populates='event', cascade='all, delete-orphan')
 
