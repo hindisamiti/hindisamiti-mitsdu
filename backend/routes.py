@@ -662,6 +662,76 @@ def delete_event(current_admin, event_id):
         return jsonify({'message': str(e)}), 500
 
 
+
+# Event Cover Image Upload Route
+@route.route('/api/admin/events/upload-cover-image', methods=['POST'])
+@token_required
+def upload_event_cover(current_admin):
+    try:
+        print("📤 EVENT UPLOAD: Received event cover image upload request")
+        
+        if 'image' not in request.files:
+            print("❌ EVENT UPLOAD: No image file in request")
+            return jsonify({'message': 'No image file provided'}), 400
+        
+        file = request.files['image']
+        print(f"📎 EVENT UPLOAD: File received: {file.filename}")
+        
+        if file.filename == '':
+            print("❌ EVENT UPLOAD: Empty filename")
+            return jsonify({'message': 'No file selected'}), 400
+            
+        # Try Cloudinary upload (primary)
+        # Using "hindi_samiti/events" folder
+        cloudinary_url = upload_image(file, folder="hindi_samiti/events")
+        
+        if cloudinary_url:
+            print(f"✅ EVENT UPLOAD: Uploaded to Cloudinary: {cloudinary_url}")
+            return jsonify({
+                'success': True,
+                'image_url': cloudinary_url
+            }), 200
+            
+        # Fallback to local storage
+        print("📁 EVENT UPLOAD: Cloudinary failed or not configured, using local storage")
+        
+        # Create events upload directory
+        upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
+        event_covers_folder = os.path.join(upload_folder, 'event_covers')
+        os.makedirs(event_covers_folder, exist_ok=True)
+        
+        # Reset file pointer
+        file.seek(0)
+        
+        # Generate unique filename
+        # Basic extension handling if missing
+        if '.' in file.filename:
+            file_extension = file.filename.rsplit('.', 1)[1].lower()
+        else:
+            file_extension = 'jpg' # Default to jpg if no extension
+            
+        filename = str(uuid.uuid4()) + '.' + file_extension
+        filepath = os.path.join(event_covers_folder, filename)
+        
+        print(f"💾 EVENT UPLOAD: Saving to local: {filepath}")
+        file.save(filepath)
+        
+        # Return the local image URL
+        image_url = f'/uploads/event_covers/{filename}'
+        print(f"🔗 EVENT UPLOAD: Returning URL: {image_url}")
+        
+        return jsonify({
+            'success': True,
+            'image_url': image_url
+        }), 200
+        
+    except Exception as e:
+        print(f"❌ EVENT UPLOAD ERROR: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'message': str(e)}), 500
+
+
 # Admin Registrations Routes
 
 @route.route('/api/admin/registrations/<int:event_id>', methods=['GET'])
