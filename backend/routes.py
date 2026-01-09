@@ -434,7 +434,26 @@ def upload_gallery_image(current_admin):
         if file.filename == '':
             return jsonify({'message': 'No file selected'}), 400
         
+        # Try Cloudinary upload
+        cloudinary_url = upload_image(file, folder="hindi_samiti/home")
+        
+        if cloudinary_url:
+            # Create image record with Cloudinary URL
+            new_image = Image(url=cloudinary_url, caption=caption)
+            db.session.add(new_image)
+            db.session.commit()
+            
+            return jsonify({
+                'id': new_image.id,
+                'url': new_image.url,
+                'caption': new_image.caption,
+                'created_at': new_image.created_at.isoformat()
+            }), 201
+            
+        # Fallback to local (only if Cloudinary fails)
         if file and allowed_file(file.filename):
+            print("📁 UPLOAD: Cloudinary failed, using local storage")
+            
             # Generate unique filename
             filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
             upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')

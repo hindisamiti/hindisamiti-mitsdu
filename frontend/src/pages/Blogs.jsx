@@ -45,7 +45,9 @@ const Blogs = () => {
                         <div key={blog.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300">
                             {blog.cover_image_url && (
                                 <img
-                                    src={`${import.meta.env.VITE_API_BASE_URL}${blog.cover_image_url}`}
+                                    src={blog.cover_image_url.startsWith('http')
+                                        ? blog.cover_image_url
+                                        : `${import.meta.env.VITE_API_BASE_URL}${blog.cover_image_url}`}
                                     alt={blog.title}
                                     className="w-full h-48 object-cover"
                                 />
