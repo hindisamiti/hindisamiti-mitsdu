@@ -6,7 +6,7 @@ import {
   fetchRegistrations, updateRegistrationStatus, downloadRegistrationsExcel,
   fetchTeamMembers, fetchPublicTeamMembers, createTeamMember, updateTeamMember, deleteTeamMember,
   createBlog, updateBlog, deleteBlog, uploadBlogCover,
-  viewScreenshot, fixDatabaseSchema
+  viewScreenshot, fixDatabaseSchema, uploadEventQR
 } from '../utils/api';
 import { checkAuth, logout } from '../utils/auth';
 
@@ -911,11 +911,6 @@ const EventsSection = () => {
         errorMessage = 'Network Error: No response from server';
       } else {
         errorMessage = error.message || 'Unknown Error';
-        try {
-          errorMessage += ` | Debug: ${JSON.stringify(error, Object.getOwnPropertyNames(error))}`;
-        } catch (e) {
-          errorMessage += ` | Debug: Could not stringify error`;
-        }
       }
 
       throw new Error(errorMessage);
