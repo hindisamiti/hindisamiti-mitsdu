@@ -256,14 +256,25 @@ const BlogsSection = () => {
                 placeholder="Leave blank to use default (Admin)"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
-              <textarea
-                value={blogForm.content}
-                onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
-                className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all h-64"
-                required
-              />
+            <div className="mb-8">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Content</label>
+              <div className="h-64 mb-12">
+                <ReactQuill
+                  theme="snow"
+                  value={blogForm.content}
+                  onChange={(content) => setBlogForm({ ...blogForm, content })}
+                  className="h-full"
+                  modules={{
+                    toolbar: [
+                      [{ 'header': [1, 2, 3, false] }],
+                      ['bold', 'italic', 'underline', 'strike'],
+                      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                      [{ 'color': [] }, { 'background': [] }],
+                      ['link', 'clean']
+                    ]
+                  }}
+                />
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Cover Image</label>
