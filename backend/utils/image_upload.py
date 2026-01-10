@@ -23,7 +23,7 @@ def upload_image(file, folder="hindi_samiti"):
     Uploads file to Cloudinary and returns the URL.
     If Cloudinary is not configured, returns None.
     """
-    """
+
     if not check_cloudinary_config():
         print("❌ Cloudinary credentials missing in environment variables")
         # Return None or raise? Returning None was old behavior, but better to signal why.
