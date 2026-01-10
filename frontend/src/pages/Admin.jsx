@@ -9,8 +9,8 @@ import {
   viewScreenshot, fixDatabaseSchema, uploadEventQR
 } from '../utils/api';
 import { checkAuth, logout } from '../utils/auth';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 
 
