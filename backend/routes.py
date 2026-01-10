@@ -163,7 +163,8 @@ def get_public_events():
                 'date': event.date.isoformat(),
                 'description': event.description,
                 'cover_image_url': event.cover_image_url,
-                'is_active': event.is_active
+                'is_active': event.is_active,
+                'qr_code_url': event.qr_code_url
             }
             
             # Include form fields if requested
@@ -213,7 +214,8 @@ def get_public_event_details(event_id):
             'description': event.description,
             'cover_image_url': event.cover_image_url,
             'form_fields': sorted(form_fields, key=lambda x: x['order']),
-            'is_active': event.is_active
+            'is_active': event.is_active,
+            'qr_code_url': event.qr_code_url
         }
         
         return jsonify(event_data), 200
