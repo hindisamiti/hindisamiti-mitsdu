@@ -893,7 +893,27 @@ const EventsSection = () => {
       return result.image_url;
     } catch (error) {
       console.error("QR upload error:", error);
-      throw new Error(error.response?.data?.message || 'Failed to upload QR code');
+
+      let errorMessage = 'Failed to upload QR code';
+
+      if (error.response) {
+        // Server responded with a status code
+        if (error.response.data && typeof error.response.data === 'object' && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (typeof error.response.data === 'string') {
+          // Likely HTML error page (500 or 413)
+          errorMessage = `Server Error (${error.response.status}): ` + error.response.data.substring(0, 100);
+        } else {
+          errorMessage = `Upload failed with status ${error.response.status}`;
+        }
+      } else if (error.request) {
+        // Request made but no response
+        errorMessage = 'Network Error: No response from server';
+      } else {
+        errorMessage = error.message;
+      }
+
+      throw new Error(errorMessage);
     } finally {
       setIsUploadingQR(false);
     }
