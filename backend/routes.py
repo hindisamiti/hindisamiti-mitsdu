@@ -1016,7 +1016,7 @@ def get_public_blogs():
                 'content': blog.content,
                 'author': blog.author,
                 'cover_image_url': blog.cover_image_url,
-                'created_at': blog.created_at.isoformat()
+                'created_at': blog.created_at.isoformat() + 'Z'
             })
         
         return jsonify(blogs_data), 200
@@ -1036,7 +1036,7 @@ def get_public_blog_details(blog_id):
             'content': blog.content,
             'author': blog.author,
             'cover_image_url': blog.cover_image_url,
-            'created_at': blog.created_at.isoformat()
+            'created_at': blog.created_at.isoformat() + 'Z'
         }), 200
         
     except Exception as e:
