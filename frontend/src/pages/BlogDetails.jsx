@@ -56,10 +56,13 @@ const BlogDetails = () => {
                     <span>{new Date(blog.created_at).toLocaleDateString('en-GB')}</span>
                 </div>
 
-                <div
-                    className="prose prose-lg prose-orange max-w-none break-words"
-                    dangerouslySetInnerHTML={{ __html: blog.content }}
-                />
+                <div className="overflow-x-auto pb-2">
+                    <div
+                        className="prose prose-lg prose-orange max-w-none text-left"
+                        style={{ wordBreak: 'normal', overflowWrap: 'normal', minWidth: '100%', hyphens: 'none' }}
+                        dangerouslySetInnerHTML={{ __html: blog.content }}
+                    />
+                </div>
             </div>
             <Footer />
         </div>
