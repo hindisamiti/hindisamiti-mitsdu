@@ -57,7 +57,7 @@ const BlogDetails = () => {
                 </div>
 
                 <div
-                    className="prose prose-lg prose-orange max-w-none"
+                    className="prose prose-lg prose-orange max-w-none break-words"
                     dangerouslySetInnerHTML={{ __html: blog.content }}
                 />
             </div>
