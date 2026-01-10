@@ -324,8 +324,8 @@ def update_intro(current_admin):
 
 
 @route.route('/api/admin/blogs/upload-cover', methods=['POST'])
-@jwt_required()
-def upload_blog_cover():
+@token_required
+def upload_blog_cover(current_admin):
     try:
         print("📤 UPLOAD: Received blog cover image upload request")
         
