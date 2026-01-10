@@ -43,7 +43,7 @@ const BlogDetails = () => {
                     <img
                         src={getAbsoluteImageUrl(blog.cover_image_url)}
                         alt={blog.title}
-                        className="w-full h-64 md:h-96 object-cover rounded-lg shadow-lg mb-8"
+                        className="w-full h-auto rounded-lg shadow-lg mb-8"
                     />
                 )}
 
