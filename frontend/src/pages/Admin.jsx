@@ -258,14 +258,16 @@ const BlogsSection = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Cover Image</label>
               <div className="flex flex-col space-y-2">
-                <input
-                  type="text"
-                  placeholder="Image URL (optional)"
-                  value={blogForm.cover_image_url}
-                  onChange={(e) => setBlogForm({ ...blogForm, cover_image_url: e.target.value })}
-                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
-                />
-                <span className="text-gray-500 text-sm font-medium">OR Upload File</span>
+                {blogForm.cover_image_url && (
+                  <div className="mb-2">
+                    <img
+                      src={blogForm.cover_image_url}
+                      alt="Current Cover"
+                      className="h-32 w-auto object-cover rounded-md border border-gray-300"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Current Image</p>
+                  </div>
+                )}
                 <input
                   type="file"
                   accept="image/*"

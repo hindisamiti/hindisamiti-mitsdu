@@ -49,7 +49,7 @@ const Blogs = () => {
                                         ? blog.cover_image_url
                                         : `${import.meta.env.VITE_API_BASE_URL}${blog.cover_image_url}`}
                                     alt={blog.title}
-                                    className="w-full h-48 object-cover"
+                                    className="w-full h-auto object-contain max-h-[600px]"
                                 />
                             )}
                             <div className="p-6">
