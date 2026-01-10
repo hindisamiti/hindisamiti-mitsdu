@@ -6,7 +6,7 @@ import {
   fetchRegistrations, updateRegistrationStatus, downloadRegistrationsExcel,
   fetchTeamMembers, fetchPublicTeamMembers, createTeamMember, updateTeamMember, deleteTeamMember,
   createBlog, updateBlog, deleteBlog, uploadBlogCover,
-  viewScreenshot
+  viewScreenshot, fixDatabaseSchema
 } from '../utils/api';
 import { checkAuth, logout } from '../utils/auth';
 
@@ -86,6 +86,12 @@ const Admin = () => {
             >
               Blogs
             </button>
+            <button
+              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'system' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
+              onClick={() => setActiveTab('system')}
+            >
+              System
+            </button>
           </nav>
         </div>
       </div>
@@ -97,7 +103,9 @@ const Admin = () => {
           {activeTab === 'events' && <EventsSection />}
           {activeTab === 'registrations' && <RegistrationsSection />}
           {activeTab === 'team' && <TeamSection />}
+          {activeTab === 'team' && <TeamSection />}
           {activeTab === 'blogs' && <BlogsSection />}
+          {activeTab === 'system' && <SystemSection />}
         </div>
       </div>
     </div>
@@ -1747,6 +1755,71 @@ const TeamSection = () => {
           )}
         </div>
       )}
+    </div>
+  );
+};
+
+// System Maintenance Section
+const SystemSection = () => {
+  const [message, setMessage] = useState({ text: '', type: '' });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleFixSchema = async () => {
+    if (!window.confirm("This will attempt to run database migrations on the production server. Continue?")) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setMessage({ text: 'Running schema migration...', type: 'info' });
+
+      const result = await fixDatabaseSchema();
+      setMessage({ text: 'Database schema updated successfully!', type: 'success' });
+    } catch (error) {
+      console.error("Schema fix error:", error);
+      setMessage({ text: 'Failed to update schema: ' + (error.response?.data?.message || error.message), type: 'error' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-center border-b border-orange-100 pb-4">
+        <h2 className="text-2xl font-bold text-orange-900">System Maintenance</h2>
+      </div>
+
+      {message.text && (
+        <div className={`p-4 rounded-md border ${message.type === 'success' ? 'bg-green-50 text-green-800 border-green-200' :
+          message.type === 'error' ? 'bg-red-50 text-red-800 border-red-200' :
+            'bg-blue-50 text-blue-800 border-blue-200'}`}>
+          {message.text}
+        </div>
+      )}
+
+      <div className="bg-white p-6 rounded-lg shadow border border-orange-100">
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Database Schema Repair</h3>
+        <p className="text-gray-600 mb-4">
+          Use this if you are seeing "UndefinedColumn" errors (e.g., missing qr_code_url column) on the live site.
+          This will attempt to manually add missing columns to the production database.
+        </p>
+
+        <button
+          onClick={handleFixSchema}
+          disabled={isLoading}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md shadow transition-colors disabled:opacity-50 flex items-center"
+        >
+          {isLoading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Running Migration...
+            </>
+          ) : 'Fix Database Schema'}
+        </button>
+      </div>
     </div>
   );
 };

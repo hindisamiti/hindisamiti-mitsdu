@@ -312,6 +312,11 @@ export const uploadEventQR = async (formData) => {
   return response.data;
 };
 
+export const fixDatabaseSchema = async () => {
+  const response = await api.post('/admin/fix-schema', {});
+  return response.data;
+};
+
 export const deleteImage = async (imageId) => {
   const response = await api.delete(`/admin/images/${imageId}`);
   return response.data;

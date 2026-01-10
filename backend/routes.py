@@ -5,7 +5,7 @@ from datetime import datetime
 import io
 from flask import current_app
 from flask import Blueprint, request, jsonify, send_file, abort
-from sqlalchemy import extract, func
+from sqlalchemy import extract, func, text
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, jwt_required, get_jwt_identity
@@ -298,6 +298,25 @@ def verify_token(current_admin):
             'username': current_admin.username
         }
     }), 200
+
+@route.route('/api/admin/fix-schema', methods=['POST'])
+@token_required
+def fix_schema(current_admin):
+    """Run manual schema migration for production"""
+    try:
+        print("🔧 SCHEMA FIX: Attempting to add qr_code_url column")
+        # Raw SQL to add column - compatible with Postgres
+        db.session.execute(text("ALTER TABLE events ADD COLUMN IF NOT EXISTS qr_code_url VARCHAR(255)"))
+        db.session.commit()
+        print("✅ SCHEMA FIX: Successfully updated schema")
+        return jsonify({'message': 'Schema updated successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ SCHEMA FIX ERROR: {str(e)}")
+        # Check if error is because column exists (for databases that don't support IF NOT EXISTS like old SQLite)
+        if "duplicate column" in str(e).lower() or "already exists" in str(e).lower():
+             return jsonify({'message': 'Column already exists'}), 200
+        return jsonify({'message': str(e)}), 500
 
 # Admin Home Content Routes
 
