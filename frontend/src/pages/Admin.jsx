@@ -910,7 +910,12 @@ const EventsSection = () => {
         // Request made but no response
         errorMessage = 'Network Error: No response from server';
       } else {
-        errorMessage = error.message;
+        errorMessage = error.message || 'Unknown Error';
+        try {
+          errorMessage += ` | Debug: ${JSON.stringify(error, Object.getOwnPropertyNames(error))}`;
+        } catch (e) {
+          errorMessage += ` | Debug: Could not stringify error`;
+        }
       }
 
       throw new Error(errorMessage);
