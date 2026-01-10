@@ -49,14 +49,15 @@ const Blogs = () => {
                                         ? blog.cover_image_url
                                         : `${import.meta.env.VITE_API_BASE_URL}${blog.cover_image_url}`}
                                     alt={blog.title}
-                                    className="w-full h-auto object-contain max-h-[600px]"
+
+                                    className="w-full h-60 object-contain bg-gray-50"
                                 />
                             )}
                             <div className="p-6">
                                 <h2 className="text-xl font-bold text-gray-800 mb-2">{blog.title}</h2>
                                 <div className="flex justify-between items-center text-gray-500 text-sm mb-4">
                                     <span>By {blog.author}</span>
-                                    <span>{new Date(blog.created_at).toLocaleDateString()}</span>
+                                    <span>{new Date(blog.created_at).toLocaleDateString('en-GB')}</span>
                                 </div>
                                 <p className="text-gray-600 mb-4 line-clamp-3">
                                     {blog.content.substring(0, 150)}...

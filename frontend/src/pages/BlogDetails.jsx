@@ -40,18 +40,20 @@ const BlogDetails = () => {
                 <Link to="/blogs" className="text-orange-600 hover:underline mb-4 inline-block">&larr; Back to Blogs</Link>
 
                 {blog.cover_image_url && (
-                    <img
-                        src={getAbsoluteImageUrl(blog.cover_image_url)}
-                        alt={blog.title}
-                        className="w-full h-auto rounded-lg shadow-lg mb-8"
-                    />
+                    <div className="max-w-3xl mx-auto mb-8">
+                        <img
+                            src={getAbsoluteImageUrl(blog.cover_image_url)}
+                            alt={blog.title}
+                            className="w-full h-auto rounded-lg shadow-lg"
+                        />
+                    </div>
                 )}
 
                 <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4">{blog.title}</h1>
 
                 <div className="flex items-center text-gray-600 mb-8 border-b border-gray-200 pb-4">
                     <span className="mr-4 font-semibold">By {blog.author}</span>
-                    <span>{new Date(blog.created_at).toLocaleDateString()}</span>
+                    <span>{new Date(blog.created_at).toLocaleDateString('en-GB')}</span>
                 </div>
 
                 <div className="prose prose-lg prose-orange max-w-none">
