@@ -305,6 +305,13 @@ export const uploadImage = async (formData) => {
   return response.data;
 };
 
+export const uploadEventQR = async (formData) => {
+  const response = await api.post('/admin/events/upload-qr', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  });
+  return response.data;
+};
+
 export const deleteImage = async (imageId) => {
   const response = await api.delete(`/admin/images/${imageId}`);
   return response.data;

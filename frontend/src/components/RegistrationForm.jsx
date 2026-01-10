@@ -20,7 +20,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
       // Sort form fields by order if available
       const sortedFields = [...event.form_fields].sort((a, b) => (a.order || 0) - (b.order || 0));
       setFormFields(sortedFields);
-      
+
       const initialData = {};
       sortedFields.forEach(field => {
         initialData[field.id] = '';
@@ -39,15 +39,15 @@ const RegistrationForm = ({ event, onSubmit }) => {
       setErrors({ email: 'Email is required' });
       return;
     }
-    
+
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setErrors({ email: 'Please enter a valid email' });
       return;
     }
-    
+
     setErrors({});
     setCheckingEmail(true);
-    
+
     try {
       const response = await api.get(`/registrations/check/${event.id}?email=${encodeURIComponent(email)}`);
       if (response.data.exists) {
@@ -71,7 +71,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
       ...formData,
       [fieldId]: value
     });
-    
+
     if (errors[fieldId]) {
       const newErrors = { ...errors };
       delete newErrors[fieldId];
@@ -98,7 +98,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
       setScreenshot(file);
       const previewUrl = URL.createObjectURL(file);
       setScreenshotPreview(previewUrl);
-      
+
       if (errors.screenshot) {
         const newErrors = { ...errors };
         delete newErrors.screenshot;
@@ -109,26 +109,26 @@ const RegistrationForm = ({ event, onSubmit }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Validate required form fields
     formFields.forEach(field => {
       if (field.is_required && (!formData[field.id] || formData[field.id].trim() === '')) {
         newErrors[field.id] = `${field.label} is required`;
       }
     });
-    
-    // Validate screenshot
-    if (!screenshot) {
+
+    // Validate screenshot only if event has a QR code (paid event)
+    if (event.qr_code_url && !screenshot) {
       newErrors.screenshot = 'Payment screenshot is required';
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!event) {
       setErrors({ submit: 'Event data is not available. Please try again later.' });
       return;
@@ -137,36 +137,41 @@ const RegistrationForm = ({ event, onSubmit }) => {
     if (!validateForm()) {
       return;
     }
-    
+
     setLoading(true);
-    
+
     try {
-      // Validate screenshot file again before upload
-      if (!screenshot || !(screenshot instanceof File)) {
-        setErrors({ submit: 'Invalid screenshot file. Please select a valid image file.' });
-        setLoading(false);
-        return;
+      let screenshotUrl = '';
+
+      // Upload screenshot only if present
+      if (screenshot) {
+        // Validate screenshot file again before upload
+        if (!(screenshot instanceof File)) {
+          setErrors({ submit: 'Invalid screenshot file. Please select a valid image file.' });
+          setLoading(false);
+          return;
+        }
+
+        // Upload screenshot first
+        const formDataWithFile = new FormData();
+        formDataWithFile.append('file', screenshot, screenshot.name);
+
+        // Debug: Log FormData contents
+        console.log('FormData contents:');
+        for (let [key, value] of formDataWithFile.entries()) {
+          console.log(key, value);
+        }
+
+        // Make upload request with proper headers
+        const uploadResponse = await api.post('/upload', formDataWithFile, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        screenshotUrl = uploadResponse.data.url;
       }
 
-      // Upload screenshot first
-      const formDataWithFile = new FormData();
-      formDataWithFile.append('file', screenshot, screenshot.name);
-      
-      // Debug: Log FormData contents
-      console.log('FormData contents:');
-      for (let [key, value] of formDataWithFile.entries()) {
-        console.log(key, value);
-      }
-      
-      // Make upload request with proper headers
-      const uploadResponse = await api.post('/upload', formDataWithFile, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      
-      const screenshotUrl = uploadResponse.data.url;
-      
       // Prepare registration data
       const registrationData = {
         event_id: event.id,
@@ -179,18 +184,18 @@ const RegistrationForm = ({ event, onSubmit }) => {
             value: formData[fieldId].trim()
           }))
       };
-      
+
       // Submit registration
       const response = await api.post('/registrations', registrationData);
-      
+
       setRegistrationStatus('pending');
-      
+
       if (onSubmit) {
         onSubmit(response.data);
       }
     } catch (error) {
       console.error('Error submitting registration:', error);
-      
+
       // Handle specific error messages from backend
       if (error.response && error.response.data && error.response.data.error) {
         setErrors({ submit: error.response.data.error });
@@ -219,7 +224,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
             placeholder={`Enter ${field.label.toLowerCase()}`}
           />
         );
-      
+
       case 'email':
         return (
           <input
@@ -231,7 +236,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
             placeholder={`Enter ${field.label.toLowerCase()}`}
           />
         );
-      
+
       case 'textarea':
         return (
           <textarea
@@ -243,7 +248,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
             rows={3}
           />
         );
-      
+
       case 'number':
         return (
           <input
@@ -255,7 +260,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
             placeholder={`Enter ${field.label.toLowerCase()}`}
           />
         );
-      
+
       case 'tel':
         return (
           <input
@@ -267,7 +272,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
             placeholder={`Enter ${field.label.toLowerCase()}`}
           />
         );
-      
+
       default:
         return (
           <input
@@ -286,7 +291,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
     switch (registrationStatus) {
       case 'pending':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6"
@@ -296,7 +301,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
         );
       case 'verified':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6"
@@ -306,7 +311,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
         );
       case 'rejected':
         return (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6"
@@ -330,13 +335,13 @@ const RegistrationForm = ({ event, onSubmit }) => {
   return (
     <div className="bg-orange-50 rounded-lg shadow-lg p-6 max-w-xl mx-auto">
       <h2 className="text-2xl font-bold text-orange-900 mb-6 text-center">
-        {registrationStatus && registrationStatus !== 'new' 
-          ? 'Registration Status' 
+        {registrationStatus && registrationStatus !== 'new'
+          ? 'Registration Status'
           : `Register for ${event?.name}`}
       </h2>
-      
+
       {renderStatusMessage()}
-      
+
       {(!registrationStatus || registrationStatus === 'new') && (
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
@@ -374,7 +379,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
               </div>
             </div>
           </div>
-          
+
           {registrationStatus === 'new' && (
             <>
               {formFields.length > 0 && formFields.map((field) => (
@@ -382,69 +387,73 @@ const RegistrationForm = ({ event, onSubmit }) => {
                   <label htmlFor={`field-${field.id}`} className="block text-orange-800 font-medium mb-1">
                     {field.label} {field.is_required && <span className="text-red-500">*</span>}
                   </label>
-                  
+
                   {renderFieldInput(field)}
-                  
+
                   {errors[field.id] && (
                     <p className="text-red-500 text-sm mt-1">{errors[field.id]}</p>
                   )}
                 </div>
               ))}
-              {/* QR Code Display */}
-              <div className="mb-6 text-center">
-                <h3 className="text-lg font-semibold text-orange-800 mb-2">Scan & Pay</h3>
-                <div className="inline-block p-3 bg-white rounded-xl shadow-lg border border-orange-200">
-                  <img
-                    src={qrCode}
-                    alt="QR Code for Payment"
-                    className="w-40 h-40 object-contain mx-auto rounded"
-                  />
-                  <p className="text-sm text-orange-600 mt-2">Scan this code to pay</p>
-                </div>
-              </div>
-
-              <div className="mb-6">
-                <label className="block text-orange-800 font-medium mb-1">
-                  Payment Screenshot <span className="text-red-500">*</span>
-                </label>
-                <div 
-                  className={`border-2 border-dashed ${errors.screenshot ? 'border-red-500' : 'border-orange-300'} rounded-lg p-4 text-center cursor-pointer hover:bg-orange-100 transition-colors`}
-                  onClick={() => document.getElementById('screenshot-upload').click()}
-                >
-                  <input
-                    type="file"
-                    id="screenshot-upload"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handleScreenshotChange}
-                  />
-                  
-                  {screenshotPreview ? (
-                    <div className="relative">
-                      <img 
-                        src={screenshotPreview} 
-                        alt="Payment Screenshot" 
-                        className="max-h-48 mx-auto rounded"
+              {/* Dynamic Payment Section */}
+              {event.qr_code_url && (
+                <>
+                  <div className="mb-6 text-center">
+                    <h3 className="text-lg font-semibold text-orange-800 mb-2">Scan & Pay</h3>
+                    <div className="inline-block p-3 bg-white rounded-xl shadow-lg border border-orange-200">
+                      <img
+                        src={event.qr_code_url}
+                        alt="QR Code for Payment"
+                        className="w-40 h-40 object-contain mx-auto rounded"
                       />
-                      <div className="mt-2 text-green-600 flex items-center justify-center">
-                        <FaCheck className="mr-1" /> Screenshot uploaded
-                      </div>
+                      <p className="text-sm text-orange-600 mt-2">Scan this code to pay</p>
                     </div>
-                  ) : (
-                    <div className="py-4">
-                      <FaCloudUploadAlt className="text-4xl text-orange-500 mx-auto mb-2" />
-                      <p className="text-orange-800">Click or drag to upload payment screenshot</p>
-                      <p className="text-orange-500 text-sm mt-1">
-                        JPG, PNG or GIF • Max 5MB
-                      </p>
+                  </div>
+
+                  <div className="mb-6">
+                    <label className="block text-orange-800 font-medium mb-1">
+                      Payment Screenshot <span className="text-red-500">*</span>
+                    </label>
+                    <div
+                      className={`border-2 border-dashed ${errors.screenshot ? 'border-red-500' : 'border-orange-300'} rounded-lg p-4 text-center cursor-pointer hover:bg-orange-100 transition-colors`}
+                      onClick={() => document.getElementById('screenshot-upload').click()}
+                    >
+                      <input
+                        type="file"
+                        id="screenshot-upload"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleScreenshotChange}
+                      />
+
+                      {screenshotPreview ? (
+                        <div className="relative">
+                          <img
+                            src={screenshotPreview}
+                            alt="Payment Screenshot"
+                            className="max-h-48 mx-auto rounded"
+                          />
+                          <div className="mt-2 text-green-600 flex items-center justify-center">
+                            <FaCheck className="mr-1" /> Screenshot uploaded
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="py-4">
+                          <FaCloudUploadAlt className="text-4xl text-orange-500 mx-auto mb-2" />
+                          <p className="text-orange-800">Click or drag to upload payment screenshot</p>
+                          <p className="text-orange-500 text-sm mt-1">
+                            JPG, PNG or GIF • Max 5MB
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                {errors.screenshot && (
-                  <p className="text-red-500 text-sm mt-1">{errors.screenshot}</p>
-                )}
-              </div>
-              
+                    {errors.screenshot && (
+                      <p className="text-red-500 text-sm mt-1">{errors.screenshot}</p>
+                    )}
+                  </div>
+                </>
+              )}
+
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -459,7 +468,7 @@ const RegistrationForm = ({ event, onSubmit }) => {
                   </>
                 ) : 'Submit Registration'}
               </motion.button>
-              
+
               {errors.submit && (
                 <p className="text-red-500 text-sm mt-2 text-center">{errors.submit}</p>
               )}

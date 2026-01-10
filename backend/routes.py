@@ -542,6 +542,37 @@ def get_events(current_admin):
         print(f"❌ Error fetching events: {str(e)}")
         return jsonify({'message': str(e)}), 500
     
+@route.route('/api/admin/events/upload-qr', methods=['POST'])
+@token_required
+def upload_event_qr(current_admin):
+    """Upload QR code for events"""
+    try:
+        print("📤 UPLOAD: Received event QR upload request")
+        
+        if 'image' not in request.files:
+            return jsonify({'message': 'No image file provided'}), 400
+        
+        file = request.files['image']
+        
+        if file.filename == '':
+            return jsonify({'message': 'No file selected'}), 400
+            
+        # Try Cloudinary upload
+        cloudinary_url = upload_image(file, folder="hindi_samiti/event_qrs")
+        
+        if cloudinary_url:
+            return jsonify({
+                'success': True,
+                'image_url': cloudinary_url,
+                'filename': file.filename
+            }), 200
+            
+        return jsonify({'message': 'Upload failed'}), 500
+            
+    except Exception as e:
+        print(f"❌ UPLOAD ERROR: {str(e)}")
+        return jsonify({'message': str(e)}), 500
+
 @route.route('/api/admin/events', methods=['POST'])
 @token_required
 def create_event(current_admin):
@@ -560,7 +591,8 @@ def create_event(current_admin):
             date=datetime.strptime(data['date'], '%Y-%m-%d').date(),
             description=data.get('description', ''),
             is_active=data.get('is_active', True),
-            cover_image_url=cover_image_url  # THIS MUST BE SET
+            cover_image_url=cover_image_url,
+            qr_code_url=data.get('qr_code_url', '')  # Add QR code URL
         )
         
         db.session.add(event)
@@ -615,6 +647,8 @@ def update_event(current_admin, event_id):
         # IMPORTANT: Update cover_image_url if provided
         if 'cover_image_url' in data:
             event.cover_image_url = data['cover_image_url']
+        if 'qr_code_url' in data:
+            event.qr_code_url = data['qr_code_url']
             print(f"🖼️ Updated cover_image_url: {event.cover_image_url}")
         
         # Delete existing form fields

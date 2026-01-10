@@ -30,6 +30,7 @@ class Event(db.Model):
     description = Column(Text)
     is_active = Column(Boolean, default=True)
     cover_image_url = Column(String(255))
+    qr_code_url = Column(String(255))
     registrations = relationship('Registration', back_populates='event')
     form_fields = relationship('EventFormField', back_populates='event', cascade='all, delete-orphan')
 

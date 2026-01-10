@@ -739,6 +739,9 @@ const EventsSection = () => {
   const [coverImageFile, setCoverImageFile] = useState(null);
   const [coverImagePreview, setCoverImagePreview] = useState('');
   const [isUploadingCover, setIsUploadingCover] = useState(false);
+  const [qrCodeFile, setQrCodeFile] = useState(null);
+  const [qrCodePreview, setQrCodePreview] = useState('');
+  const [isUploadingQR, setIsUploadingQR] = useState(false);
 
   // Form fields for event
   const [eventForm, setEventForm] = useState({
@@ -778,6 +781,8 @@ const EventsSection = () => {
     });
     setCoverImagePreview(event.cover_image_url || '');
     setCoverImageFile(null);
+    setQrCodePreview(event.qr_code_url || '');
+    setQrCodeFile(null);
     setShowForm(true);
   };
 
@@ -796,6 +801,8 @@ const EventsSection = () => {
     });
     setCoverImagePreview('');
     setCoverImageFile(null);
+    setQrCodePreview('');
+    setQrCodeFile(null);
     setShowForm(true);
   };
 
@@ -856,6 +863,34 @@ const EventsSection = () => {
     }
   };
 
+  const handleQRSelect = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setQrCodeFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setQrCodePreview(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadQR = async () => {
+    if (!qrCodeFile) return null;
+    try {
+      setIsUploadingQR(true);
+      const formData = new FormData();
+      formData.append('image', qrCodeFile);
+      const result = await uploadEventQR(formData);
+      return result.image_url;
+    } catch (error) {
+      console.error("QR upload error:", error);
+      throw new Error('Failed to upload QR code');
+    } finally {
+      setIsUploadingQR(false);
+    }
+  };
+
   const handleFormFieldChange = (index, field, value) => {
     const updatedFields = [...eventForm.formFields];
     updatedFields[index][field] = value;
@@ -897,9 +932,15 @@ const EventsSection = () => {
         finalCoverImageUrl = await uploadCoverImage();
       }
 
+      let finalQRCodeUrl = eventForm.qr_code_url;
+      if (qrCodeFile) {
+        finalQRCodeUrl = await uploadQR();
+      }
+
       const finalEventForm = {
         ...eventForm,
-        cover_image_url: finalCoverImageUrl
+        cover_image_url: finalCoverImageUrl,
+        qr_code_url: finalQRCodeUrl
       };
 
       if (selectedEvent) {
@@ -1022,6 +1063,64 @@ const EventsSection = () => {
                   Selected: {coverImageFile.name}
                 </p>
               )}
+            </div>
+
+            {/* QR Code Upload Section - NEW */}
+            <div className="bg-white p-4 rounded-lg border border-orange-200 mt-6 mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Payment QR Code (Optional)
+              </label>
+
+              <div className="flex flex-col sm:flex-row items-start gap-6">
+                <div className="mb-4 flex flex-col items-center">
+                  {qrCodePreview ? (
+                    <div className="relative w-48 h-48 rounded-lg overflow-hidden border-2 border-orange-200 shadow-sm group">
+                      <img src={qrCodePreview} alt="QR Preview" className="w-full h-full object-contain" />
+                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all flex items-start justify-end p-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setQrCodePreview('');
+                            setQrCodeFile(null);
+                            setEventForm({ ...eventForm, qr_code_url: '' });
+                          }}
+                          className="bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-red-600 shadow-md transition-all transform hover:scale-110"
+                          title="Remove QR Code"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-32 h-32 bg-gray-50 rounded-lg flex flex-col items-center justify-center border-2 border-dashed border-gray-300">
+                      <svg className="w-8 h-8 text-gray-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+                      </svg>
+                      <span className="text-xs text-gray-500">No QR Code</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex flex-col justify-center flex-1">
+                  <div className="flex justify-start">
+                    <label className="cursor-pointer bg-white text-orange-600 border border-orange-200 hover:bg-orange-50 px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-sm">
+                      <span>{qrCodeFile ? 'Change QR Code' : 'Upload QR Code'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleQRSelect}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">
+                    {qrCodeFile ? `Selected: ${qrCodeFile.name}` : 'Upload the payment QR code for this event.'}
+                  </p>
+                  <p className="text-xs text-orange-500 mt-1">
+                    <strong>Note:</strong> If no QR code is uploaded, the event will be treated as <strong>free</strong> (no payment required).
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Basic Event Details */}
