@@ -227,11 +227,13 @@ const EventDetails = () => {
                   transition={{ delay: 0.2 }}
                   className="bg-white border-2 border-orange-200 rounded-2xl p-4 sm:p-6 mb-8 shadow-sm"
                 >
-                  <div
-                    className="prose prose-orange w-full max-w-full text-left text-orange-900"
-                    style={{ wordBreak: 'normal', overflowWrap: 'break-word', hyphens: 'none' }}
-                    dangerouslySetInnerHTML={{ __html: event.description }}
-                  />
+                  <div className="overflow-x-auto pb-2">
+                    <div
+                      className="prose prose-orange max-w-none text-left text-orange-900"
+                      style={{ wordBreak: 'normal', overflowWrap: 'normal', minWidth: '100%' }}
+                      dangerouslySetInnerHTML={{ __html: event.description }}
+                    />
+                  </div>
                 </motion.div>
 
                 {/* Date Info */}

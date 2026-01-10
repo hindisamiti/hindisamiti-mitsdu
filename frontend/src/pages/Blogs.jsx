@@ -60,7 +60,7 @@ const Blogs = () => {
                                     <span>{new Date(blog.created_at).toLocaleDateString('en-GB')}</span>
                                 </div>
                                 <p className="text-gray-600 mb-4 line-clamp-3">
-                                    {blog.content.substring(0, 150)}...
+                                    {blog.content.replace(/<[^>]+>/g, '').substring(0, 150)}...
                                 </p>
                                 <Link
                                     to={`/blogs/${blog.id}`}

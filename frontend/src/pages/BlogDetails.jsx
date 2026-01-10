@@ -56,11 +56,10 @@ const BlogDetails = () => {
                     <span>{new Date(blog.created_at).toLocaleDateString('en-GB')}</span>
                 </div>
 
-                <div className="prose prose-lg prose-orange max-w-none">
-                    {blog.content.split('\n').map((paragraph, idx) => (
-                        <p key={idx} className="mb-4">{paragraph}</p>
-                    ))}
-                </div>
+                <div
+                    className="prose prose-lg prose-orange max-w-none"
+                    dangerouslySetInnerHTML={{ __html: blog.content }}
+                />
             </div>
             <Footer />
         </div>
