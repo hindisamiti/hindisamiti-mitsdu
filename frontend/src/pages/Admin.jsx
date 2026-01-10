@@ -893,7 +893,7 @@ const EventsSection = () => {
       return result.image_url;
     } catch (error) {
       console.error("QR upload error:", error);
-      throw new Error('Failed to upload QR code');
+      throw new Error(error.response?.data?.message || 'Failed to upload QR code');
     } finally {
       setIsUploadingQR(false);
     }

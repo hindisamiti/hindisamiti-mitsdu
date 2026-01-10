@@ -19,7 +19,7 @@ import os
 from io import BytesIO
 import uuid
 import mimetypes
-from utils.image_upload import upload_image
+from utils.image_upload import upload_image, check_cloudinary_config
 
 # Import your models
 from models import db, Admin, Image, Intro, Event, EventFormField, Registration, RegistrationFieldResponse, TeamMember, Blog
@@ -586,7 +586,14 @@ def upload_event_qr(current_admin):
                 'filename': file.filename
             }), 200
             
-        return jsonify({'message': 'Upload failed'}), 500
+        # Check if failure was due to missing config
+        if not check_cloudinary_config():
+            print("❌ UPLOAD FAILED: Missing Cloudinary credentials")
+            return jsonify({
+                'message': 'Cloudinary configuration missing on server. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your Render environment variables.'
+            }), 500
+            
+        return jsonify({'message': 'Upload failed. Check server logs.'}), 500
             
     except Exception as e:
         print(f"❌ UPLOAD ERROR: {str(e)}")
