@@ -229,7 +229,7 @@ const EventDetails = () => {
                   className="bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 border-2 border-orange-400 rounded-2xl p-6 mb-8"
                 >
                   <div
-                    className="text-orange-900 text-lg sm:text-xl leading-relaxed quill-content text-center italic"
+                    className="text-orange-900 text-lg sm:text-xl leading-relaxed quill-content"
                     dangerouslySetInnerHTML={{ __html: event.description }}
                   />
                 </motion.div>
