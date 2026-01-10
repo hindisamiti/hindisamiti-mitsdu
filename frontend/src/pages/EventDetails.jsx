@@ -228,7 +228,7 @@ const EventDetails = () => {
                   className="bg-white border-2 border-orange-200 rounded-2xl p-4 sm:p-6 mb-8 shadow-sm"
                 >
                   <div
-                    className="prose prose-orange w-full max-w-full break-words hyphens-none text-orange-900"
+                    className="prose prose-orange w-full max-w-full break-normal hyphens-none text-left text-orange-900"
                     dangerouslySetInnerHTML={{ __html: event.description }}
                   />
                 </motion.div>
