@@ -175,7 +175,7 @@ const EventDetails = () => {
       <Navbar />
 
       {/* Modal-style Content Container */}
-      <section className="relative py-12 sm:py-16">
+      <section className="relative py-12 sm:py-16 pt-24 sm:pt-28">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Back Button */}
           <Link to="/events">
@@ -228,7 +228,7 @@ const EventDetails = () => {
                   className="bg-white border-2 border-orange-200 rounded-2xl p-6 mb-8 shadow-sm"
                 >
                   <div
-                    className="prose prose-orange w-full max-w-full break-words hyphens-none text-orange-900"
+                    className="prose prose-orange w-full max-w-full break-normal hyphens-none text-orange-900"
                     dangerouslySetInnerHTML={{ __html: event.description }}
                   />
                 </motion.div>
