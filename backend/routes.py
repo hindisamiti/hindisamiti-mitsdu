@@ -554,6 +554,7 @@ def get_events(current_admin):
                 'description': event.description,
                 'is_active': event.is_active,
                 'cover_image_url': event.cover_image_url,  # Send exactly what's in DB
+                'qr_code_url': event.qr_code_url,
                 'form_fields': sorted(form_fields, key=lambda x: x['order'])
             })
         

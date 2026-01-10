@@ -9,6 +9,8 @@ import {
   viewScreenshot, fixDatabaseSchema, uploadEventQR
 } from '../utils/api';
 import { checkAuth, logout } from '../utils/auth';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 
 
@@ -1186,13 +1188,14 @@ const EventsSection = () => {
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description
               </label>
-              <textarea
-                name="description"
-                value={eventForm.description}
-                onChange={handleInputChange}
-                rows="4"
-                className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
-              ></textarea>
+              <div className="bg-white">
+                <ReactQuill
+                  theme="snow"
+                  value={eventForm.description}
+                  onChange={(content) => setEventForm({ ...eventForm, description: content })}
+                  className="h-64 mb-12" // Add margin bottom for toolbar space
+                />
+              </div>
             </div>
 
             <div className="flex items-center p-3 bg-white rounded-md border border-orange-100">

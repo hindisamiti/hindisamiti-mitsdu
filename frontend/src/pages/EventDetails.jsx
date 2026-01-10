@@ -226,11 +226,12 @@ const EventDetails = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 border-2 border-orange-400 rounded-2xl p-6 mb-8 text-center"
+                  className="bg-gradient-to-r from-orange-100 via-amber-50 to-orange-100 border-2 border-orange-400 rounded-2xl p-6 mb-8"
                 >
-                  <p className="text-orange-900 text-lg sm:text-xl leading-relaxed italic">
-                    {event.description}
-                  </p>
+                  <div
+                    className="text-orange-900 text-lg sm:text-xl leading-relaxed quill-content text-center italic"
+                    dangerouslySetInnerHTML={{ __html: event.description }}
+                  />
                 </motion.div>
 
                 {/* Date Info */}
