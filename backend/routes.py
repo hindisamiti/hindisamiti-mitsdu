@@ -4,7 +4,7 @@ import csv
 from datetime import datetime
 import io
 from flask import current_app
-from flask import Blueprint, request, jsonify, send_file, abort
+from flask import Blueprint, request, jsonify, send_file, abort, redirect
 from sqlalchemy import extract, func, text
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
@@ -1690,6 +1690,11 @@ def view_screenshot(current_admin, registration_id):
         if not registration.screenshot_url:
             return jsonify({'message': 'No screenshot available for this registration'}), 404
             
+        # FIXED: Handle Cloudinary URLs (redirect to them)
+        if registration.screenshot_url.startswith('http') or registration.screenshot_url.startswith('https'):
+            print(f"🔗 Redirecting to Cloudinary URL: {registration.screenshot_url}")
+            return redirect(registration.screenshot_url)
+
         # FIXED: Better file path construction
         # Get the uploads directory (should be consistent with where files are saved)
         uploads_dir = os.path.join(os.path.dirname(__file__), 'uploads', 'screenshots')
