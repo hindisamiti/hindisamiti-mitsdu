@@ -14,9 +14,18 @@ import 'react-quill-new/dist/quill.snow.css';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
 // Helper function for IST formatting
+// Helper function for IST formatting
 const formatDateIST = (dateString, includeTime = false) => {
   if (!dateString) return 'N/A';
-  const date = new Date(dateString);
+
+  // If dateString doesn't end with Z and doesn't look like it has an offset, append Z to force UTC
+  // Backend sends naive UTC strings (e.g., "2024-01-15T08:30:00")
+  let processedDateString = dateString;
+  if (!dateString.endsWith('Z') && !dateString.includes('+')) {
+    processedDateString += 'Z';
+  }
+
+  const date = new Date(processedDateString);
   const options = {
     timeZone: 'Asia/Kolkata',
     day: '2-digit',
