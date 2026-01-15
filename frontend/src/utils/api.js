@@ -480,4 +480,13 @@ export const fixBlogSchema = async () => {
   return response.data;
 };
 
+// Fix slugs schema
+export const fixSlugSchema = async () => {
+  const token = localStorage.getItem('authToken');
+  const response = await api.post('/admin/fix-slug-schema', {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return response.data;
+};
+
 export default api;
