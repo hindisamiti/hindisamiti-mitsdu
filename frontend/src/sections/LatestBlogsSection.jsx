@@ -7,14 +7,32 @@ const LatestBlogsSection = () => {
     useEffect(() => {
         const loadBlogs = async () => {
             try {
-                // Dynamic import to avoid circular dependencies if any
-                const { fetchPublicBlogs } = await import('../utils/api');
-                const data = await fetchPublicBlogs();
-                // Sort by date desc just in case, and take top 3
-                const sortedBlogs = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
-                setBlogs(sortedBlogs);
+                // Use environment variable for API base URL directly to match Blogs.jsx
+                const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+                // If undefined (local dev), vite proxy might handle it, or we default to localhost:5000
+                const baseUrl = API_BASE_URL || 'http://localhost:5000';
+
+                console.log('Fetching latest blogs from:', `${baseUrl}/api/blogs`);
+                const response = await fetch(`${baseUrl}/api/blogs`);
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch blogs status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Latest blogs data:', data);
+
+                if (Array.isArray(data)) {
+                    // Sort by date desc just in case, and take top 3
+                    const sortedBlogs = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 3);
+                    setBlogs(sortedBlogs);
+                } else {
+                    console.error('Blogs API did not return an array', data);
+                    setBlogs([]);
+                }
             } catch (error) {
                 console.error("Failed to load blogs for home page", error);
+                setBlogs([]);
             } finally {
                 setLoading(false);
             }
