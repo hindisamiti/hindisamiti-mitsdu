@@ -33,10 +33,9 @@ def upload_image(file, folder="hindi_samiti"):
         return None
 
     if configure_cloudinary():
-        try:
-            upload_result = cloudinary.uploader.upload(file, folder=folder)
-            return upload_result['secure_url']
-        except Exception as e:
-            print(f"❌ Cloudinary upload failed: {str(e)}")
-            return None
+        # Let exceptions propagate so the caller (routes.py) knows exactly what went wrong
+        # e.g. "File size too large", "Invalid API key", etc.
+        upload_result = cloudinary.uploader.upload(file, folder=folder)
+        return upload_result['secure_url']
+        
     return None

@@ -484,7 +484,13 @@ def upload_gallery_image(current_admin):
         if file.filename == '':
             return jsonify({'message': 'No file selected'}), 400
         
+        if not allowed_file(file.filename):
+            return jsonify({
+                'message': 'Invalid file type. Only PNG, JPG, JPEG, GIF, and WEBP files are allowed'
+            }), 400
+
         # Try Cloudinary upload
+        # upload_image will now raise an exception if it fails (e.g. file too big)
         cloudinary_url = upload_image(file, folder="hindi_samiti/home")
         
         if cloudinary_url:
@@ -500,10 +506,8 @@ def upload_gallery_image(current_admin):
                 'created_at': new_image.created_at.isoformat()
             }), 201
             
-        # Fallback to local (only if Cloudinary fails)
-        # If Cloudinary fails, return error immediately
-        print("❌ UPLOAD: Cloudinary upload returned None")
-        return jsonify({'message': 'Failed to upload image to cloud storage'}), 500
+        # Fallback if upload_image returns None (e.g. config missing)
+        return jsonify({'message': 'Failed to upload image: Cloudinary configuration missing'}), 500
             
     except Exception as e:
         db.session.rollback()
