@@ -13,6 +13,24 @@ import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 import { FaBars, FaTimes } from 'react-icons/fa';
 
+// Helper function for IST formatting
+const formatDateIST = (dateString, includeTime = false) => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  const options = {
+    timeZone: 'Asia/Kolkata',
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    ...(includeTime && {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    })
+  };
+  return date.toLocaleString('en-IN', options);
+};
+
 const Admin = () => {
   const navigate = useNavigate();
 
@@ -439,7 +457,7 @@ const BlogsSection = () => {
                   <tr key={blog.id} className="hover:bg-orange-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{blog.title}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{blog.author}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(blog.created_at).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDateIST(blog.created_at)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => handleEdit(blog)}
@@ -621,7 +639,7 @@ const RegistrationsSection = () => {
                       {registration.email}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(registration.timestamp).toLocaleString()}
+                      {formatDateIST(registration.timestamp, true)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-3 py-1 inline-flex text-xs leading-5 font-bold rounded-full shadow-sm
@@ -1456,7 +1474,7 @@ const EventsSection = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-500">
-                        {new Date(event.date).toLocaleDateString()}
+                        {formatDateIST(event.date)}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
