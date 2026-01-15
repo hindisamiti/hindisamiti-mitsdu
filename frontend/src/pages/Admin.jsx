@@ -11,15 +11,15 @@ import {
 import { checkAuth, logout } from '../utils/auth';
 import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
-
-
-
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 const Admin = () => {
   const navigate = useNavigate();
 
   // State for active tab
   const [activeTab, setActiveTab] = useState('home');
+  // State for mobile menu
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Authentication check
   useEffect(() => {
@@ -39,73 +39,99 @@ const Admin = () => {
     navigate('/admin-login');
   };
 
+  const NAV_ITEMS = [
+    { id: 'home', label: 'Home Content' },
+    { id: 'events', label: 'Events' },
+    { id: 'registrations', label: 'Registrations' },
+    { id: 'team', label: 'Team' },
+    { id: 'blogs', label: 'Blogs' },
+    { id: 'system', label: 'System' },
+  ];
+
+  const handleTabClick = (tabId) => {
+    setActiveTab(tabId);
+    setIsMobileMenuOpen(false); // Close mobile menu on selection
+  };
+
   return (
     <div className="min-h-screen bg-orange-50 font-hindi">
-      {/* Admin Header */}
-      <header className="bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-lg">
+      {/* Admin Header - Mobile & Desktop */}
+      <header className="bg-gradient-to-r from-orange-600 to-red-600 text-white shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Hindi Samiti Admin</h1>
-          <button
-            onClick={handleLogout}
-            className="bg-white text-red-600 hover:bg-red-50 px-4 py-2 rounded-md transition-colors font-medium shadow-sm"
-          >
-            Logout
-          </button>
+          <h1 className="text-xl md:text-2xl font-bold truncate">Hindi Samiti Admin</h1>
+
+          <div className="flex items-center gap-4">
+            <button
+              onClick={handleLogout}
+              className="hidden md:block bg-white text-red-600 hover:bg-red-50 px-4 py-2 rounded-md transition-colors font-medium shadow-sm text-sm"
+            >
+              Logout
+            </button>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-white focus:outline-none"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Admin Navigation */}
-      <div className="bg-orange-700 text-white shadow-md">
+      {/* Mobile Navigation Menu (Dropdown) */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-orange-800 text-white shadow-inner animate-fade-in-down">
+          <div className="flex flex-col py-2">
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleTabClick(item.id)}
+                className={`px-6 py-3 text-left font-medium transition-colors border-l-4 ${activeTab === item.id
+                  ? 'bg-orange-900 border-orange-400'
+                  : 'border-transparent hover:bg-orange-700'
+                  }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            <button
+              onClick={handleLogout}
+              className="px-6 py-3 text-left font-medium text-red-200 hover:bg-orange-700 border-l-4 border-transparent mt-2 border-t border-orange-700"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Navigation (Tabs) */}
+      <div className="hidden md:block bg-orange-700 text-white shadow-md">
         <div className="container mx-auto px-4">
           <nav className="flex overflow-x-auto">
-            <button
-              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'home' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
-              onClick={() => setActiveTab('home')}
-            >
-              Home Content
-            </button>
-            <button
-              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'events' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
-              onClick={() => setActiveTab('events')}
-            >
-              Events
-            </button>
-            <button
-              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'registrations' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
-              onClick={() => setActiveTab('registrations')}
-            >
-              Registrations
-            </button>
-            <button
-              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'team' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
-              onClick={() => setActiveTab('team')}
-            >
-              Team
-            </button>
-            <button
-              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'blogs' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
-              onClick={() => setActiveTab('blogs')}
-            >
-              Blogs
-            </button>
-            <button
-              className={`px-6 py-3 font-medium whitespace-nowrap transition-colors ${activeTab === 'system' ? 'bg-orange-900 shadow-inner' : 'hover:bg-orange-600'}`}
-              onClick={() => setActiveTab('system')}
-            >
-              System
-            </button>
+            {NAV_ITEMS.map((item) => (
+              <button
+                key={item.id}
+                className={`px-6 py-3 font-medium whitespace-nowrap transition-colors border-b-4 ${activeTab === item.id
+                  ? 'bg-orange-800 border-orange-400'
+                  : 'border-transparent hover:bg-orange-600'
+                  }`}
+                onClick={() => handleTabClick(item.id)}
+              >
+                {item.label}
+              </button>
+            ))}
           </nav>
         </div>
       </div>
 
       {/* Admin Content Area */}
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl shadow-xl p-6 border-t-4 border-orange-500">
+        <div className="bg-white rounded-xl shadow-xl p-4 md:p-6 border-t-4 border-orange-500 min-h-[60vh]">
           {activeTab === 'home' && <HomeContentSection />}
           {activeTab === 'events' && <EventsSection />}
           {activeTab === 'registrations' && <RegistrationsSection />}
           {activeTab === 'team' && <TeamSection />}
-
           {activeTab === 'blogs' && <BlogsSection />}
           {activeTab === 'system' && <SystemSection />}
         </div>
@@ -1403,7 +1429,7 @@ const EventsSection = () => {
           </form>
         </div>
       ) : (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-orange-100">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden border border-orange-100 overflow-x-auto">
           <table className="min-w-full divide-y divide-orange-100">
             <thead className="bg-orange-50">
               <tr>
