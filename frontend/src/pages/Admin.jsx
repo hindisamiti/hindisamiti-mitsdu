@@ -126,7 +126,6 @@ const BlogsSection = () => {
     title: '',
     author: '',
     content: '',
-    content: '',
     cover_image_url: '',
     button1_label: '',
     button1_link: '',
@@ -158,7 +157,6 @@ const BlogsSection = () => {
     setBlogForm({
       title: '',
       author: '',
-      author: '',
       content: '',
       cover_image_url: '',
       button1_label: '',
@@ -174,7 +172,6 @@ const BlogsSection = () => {
     setBlogForm({
       title: blog.title,
       author: blog.author || '',
-      content: blog.content,
       content: blog.content,
       cover_image_url: blog.cover_image_url || '',
       button1_label: blog.button1_label || '',
