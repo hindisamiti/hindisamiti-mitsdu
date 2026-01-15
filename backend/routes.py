@@ -1461,6 +1461,11 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+def validate_email(email):
+    """Validate email format using regex"""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
 
 
 @route.route('/api/registrations/check/<int:event_id>', methods=['GET'])
@@ -1587,7 +1592,7 @@ def create_registration():
         if not email or not validate_email(email):
             return jsonify({'error': 'Valid email is required'}), 400
         
-        if not screenshot_url:
+        if not screenshot_url and False: # Moved validation after event check
             return jsonify({'error': 'Payment screenshot is required'}), 400
         
         # Check if event exists and is active
@@ -1597,6 +1602,10 @@ def create_registration():
         
         if not event.is_active:
             return jsonify({'error': 'Registration is closed for this event'}), 400
+            
+        # Check screenshot requirement
+        if event.qr_code_url and not screenshot_url:
+            return jsonify({'error': 'Payment screenshot is required for paid events'}), 400
         
         # Check if email is already registered
         existing_registration = db.session.query(Registration).filter_by(
