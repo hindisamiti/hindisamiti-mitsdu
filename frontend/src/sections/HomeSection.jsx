@@ -10,7 +10,7 @@ const HomeSection = () => {
   const [error, setError] = useState(null);
 
   // Default intro text if none is provided
-  const defaultIntro = "हिन्दी समिति is the premier Hindi language and cultural club dedicated to promoting and celebrating the rich heritage of Indian culture through literature, art, and cultural events. Join us in our mission to foster appreciation for Hindi language and Indian traditions.";
+  const defaultIntro = "हिन्दी समिति एक प्रतिष्ठित भाषा एवं सांस्कृतिक संस्था है, जो हिन्दी भाषा तथा भारतीय सांस्कृतिक विरासत के संरक्षण, संवर्धन और प्रसार के लिए कार्यरत है। समिति का उद्देश्य साहित्यिक, बौद्धिक एवं सांस्कृतिक गतिविधियों के माध्यम से हिन्दी के प्रति जागरूकता, अभिरुचि और सम्मान को प्रोत्साहित करना है। वाद-विवाद, कवि-सम्मेलन, कार्यशालाओं और सांस्कृतिक आयोजनों के माध्यम से हिन्दी समिति विद्यार्थियों एवं समाज को रचनात्मक अभिव्यक्ति का एक प्रभावी मंच प्रदान करती है।";
 
   useEffect(() => {
     const loadData = async () => {
