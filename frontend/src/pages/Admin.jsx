@@ -1492,15 +1492,12 @@ const TeamSection = () => {
   const loadTeamMembers = async () => {
     try {
       setIsLoading(true);
-      console.log('🔄 ADMIN: Loading team members...');
 
       // Use the ADMIN function, not the public one
       const data = await fetchTeamMembers(); // This is the admin API function
 
-      console.log('✅ ADMIN: Team members loaded:', data);
       setTeamMembers(data);
     } catch (error) {
-      console.error('❌ ADMIN: Error loading team members:', error);
       setMessage({ text: 'Failed to load team members: ' + error.message, type: 'error' });
     } finally {
       setIsLoading(false);
