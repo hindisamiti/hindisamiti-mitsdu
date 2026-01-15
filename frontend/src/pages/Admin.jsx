@@ -126,7 +126,12 @@ const BlogsSection = () => {
     title: '',
     author: '',
     content: '',
-    cover_image_url: ''
+    content: '',
+    cover_image_url: '',
+    button1_label: '',
+    button1_link: '',
+    button2_label: '',
+    button2_link: ''
   });
   const [coverImageFile, setCoverImageFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -153,8 +158,13 @@ const BlogsSection = () => {
     setBlogForm({
       title: '',
       author: '',
+      author: '',
       content: '',
-      cover_image_url: ''
+      cover_image_url: '',
+      button1_label: '',
+      button1_link: '',
+      button2_label: '',
+      button2_link: ''
     });
     setShowForm(true);
   };
@@ -165,7 +175,12 @@ const BlogsSection = () => {
       title: blog.title,
       author: blog.author || '',
       content: blog.content,
-      cover_image_url: blog.cover_image_url || ''
+      content: blog.content,
+      cover_image_url: blog.cover_image_url || '',
+      button1_label: blog.button1_label || '',
+      button1_link: blog.button1_link || '',
+      button2_label: blog.button2_label || '',
+      button2_link: blog.button2_link || ''
     });
     setShowForm(true);
   };
@@ -218,12 +233,30 @@ const BlogsSection = () => {
     <div className="space-y-6">
       <div className="flex justify-between items-center border-b border-orange-100 pb-4">
         <h2 className="text-2xl font-bold text-orange-900">Blog Management</h2>
-        <button
-          onClick={handleCreateNew}
-          className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
-        >
-          Create New Blog
-        </button>
+        <div className="flex space-x-3">
+          <button
+            onClick={async () => {
+              try {
+                // Import dynamically or use the one from props/context if available, 
+                // but since we are in the same file as imports:
+                const { fixBlogSchema } = await import('../utils/api');
+                await fixBlogSchema();
+                alert('Schema updated successfully!');
+              } catch (e) {
+                alert('Failed to update schema: ' + e.message);
+              }
+            }}
+            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full shadow-md text-sm transition-all"
+          >
+            Fix Schema
+          </button>
+          <button
+            onClick={handleCreateNew}
+            className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-6 py-2 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5"
+          >
+            Create New Blog
+          </button>
+        </div>
       </div>
 
       {message.text && (
@@ -292,6 +325,56 @@ const BlogsSection = () => {
                 />
               </div>
             </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-orange-100">
+              <div className="col-span-2">
+                <h4 className="font-medium text-orange-800 mb-2">Optional Action Buttons (Max 2) or Links</h4>
+              </div>
+
+              {/* Button 1 */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Button 1 Label</label>
+                <input
+                  type="text"
+                  value={blogForm.button1_label}
+                  onChange={(e) => setBlogForm({ ...blogForm, button1_label: e.target.value })}
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  placeholder="e.g. Event Report"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Button 1 Link</label>
+                <input
+                  type="text"
+                  value={blogForm.button1_link}
+                  onChange={(e) => setBlogForm({ ...blogForm, button1_link: e.target.value })}
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  placeholder="https://..."
+                />
+              </div>
+
+              {/* Button 2 */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Button 2 Label</label>
+                <input
+                  type="text"
+                  value={blogForm.button2_label}
+                  onChange={(e) => setBlogForm({ ...blogForm, button2_label: e.target.value })}
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  placeholder="e.g. Gallery"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Button 2 Link</label>
+                <input
+                  type="text"
+                  value={blogForm.button2_link}
+                  onChange={(e) => setBlogForm({ ...blogForm, button2_link: e.target.value })}
+                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  placeholder="https://..."
+                />
+              </div>
+            </div>
+
             <div className="flex space-x-3 pt-4">
               <button
                 type="submit"

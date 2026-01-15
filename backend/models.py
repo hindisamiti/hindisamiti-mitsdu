@@ -89,4 +89,10 @@ class Blog(db.Model):
     author = Column(String(100), default='Admin')
     cover_image_url = Column(String(255))
     created_at = Column(DateTime, default=datetime.utcnow)
+    
+    # Optional buttons (max 2)
+    button1_label = Column(String(50))
+    button1_link = Column(String(255))
+    button2_label = Column(String(50))
+    button2_link = Column(String(255))
 

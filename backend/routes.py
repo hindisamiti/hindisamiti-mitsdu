@@ -320,6 +320,35 @@ def fix_schema(current_admin):
              return jsonify({'message': 'Column already exists'}), 200
         return jsonify({'message': str(e)}), 500
 
+@route.route('/api/admin/fix-blog-schema', methods=['POST'])
+@token_required
+def fix_blog_schema(current_admin):
+    """Run manual schema migration for blog buttons"""
+    try:
+        print("🔧 BLOG SCHEMA FIX: Attempting to add button columns")
+        # Raw SQL to add columns
+        commands = [
+            "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS button1_label VARCHAR(50)",
+            "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS button1_link VARCHAR(255)",
+            "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS button2_label VARCHAR(50)",
+            "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS button2_link VARCHAR(255)"
+        ]
+        
+        for cmd in commands:
+            try:
+                db.session.execute(text(cmd))
+            except Exception as item_error:
+                # Ignore if column exists error (for DBs that don't support IF NOT EXISTS fully)
+                 print(f"⚠️ SQL execution note: {item_error}")
+
+        db.session.commit()
+        print("✅ BLOG SCHEMA FIX: Successfully updated schema")
+        return jsonify({'message': 'Blog schema updated successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ BLOG SCHEMA FIX ERROR: {str(e)}")
+        return jsonify({'message': str(e)}), 500
+
 # Admin Home Content Routes
 
 @route.route('/api/admin/intro', methods=['GET'])
@@ -1079,7 +1108,11 @@ def get_public_blogs():
                 'content': blog.content,
                 'author': blog.author,
                 'cover_image_url': blog.cover_image_url,
-                'created_at': blog.created_at.isoformat() + 'Z'
+                'created_at': blog.created_at.isoformat() + 'Z',
+                'button1_label': blog.button1_label,
+                'button1_link': blog.button1_link,
+                'button2_label': blog.button2_label,
+                'button2_link': blog.button2_link
             })
         
         return jsonify(blogs_data), 200
@@ -1099,7 +1132,12 @@ def get_public_blog_details(blog_id):
             'content': blog.content,
             'author': blog.author,
             'cover_image_url': blog.cover_image_url,
-            'created_at': blog.created_at.isoformat() + 'Z'
+            'created_at': blog.created_at.isoformat() + 'Z',
+            'button1_label': blog.button1_label,
+            'button1_link': blog.button1_link,
+            'button2_label': blog.button2_label,
+            'button2_link': blog.button2_link
+            
         }), 200
         
     except Exception as e:
@@ -1116,7 +1154,11 @@ def create_blog(current_admin):
             title=data['title'],
             content=data['content'],
             author=data.get('author', current_admin.username),
-            cover_image_url=data.get('cover_image_url', '')
+            cover_image_url=data.get('cover_image_url', ''),
+            button1_label=data.get('button1_label', ''),
+            button1_link=data.get('button1_link', ''),
+            button2_label=data.get('button2_label', ''),
+            button2_link=data.get('button2_link', '')
         )
         
         db.session.add(blog)
@@ -1146,6 +1188,16 @@ def update_blog(current_admin, blog_id):
             blog.author = data['author']
         if 'cover_image_url' in data:
             blog.cover_image_url = data['cover_image_url']
+            
+        # Update optional buttons
+        if 'button1_label' in data:
+            blog.button1_label = data['button1_label']
+        if 'button1_link' in data:
+            blog.button1_link = data['button1_link']
+        if 'button2_label' in data:
+            blog.button2_label = data['button2_label']
+        if 'button2_link' in data:
+            blog.button2_link = data['button2_link']
             
         db.session.commit()
         return jsonify({'message': 'Blog updated successfully'}), 200

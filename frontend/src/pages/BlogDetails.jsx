@@ -61,6 +61,32 @@ const BlogDetails = () => {
                         <p key={idx} className="mb-4">{paragraph}</p>
                     ))}
                 </div>
+
+                {/* Optional Action Buttons */}
+                {(blog.button1_label && blog.button1_link) || (blog.button2_label && blog.button2_link) ? (
+                    <div className="mt-8 flex flex-wrap gap-4 pt-6 border-t border-orange-200">
+                        {blog.button1_label && blog.button1_link && (
+                            <a
+                                href={blog.button1_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-semibold py-3 px-6 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1"
+                            >
+                                {blog.button1_label} &rarr;
+                            </a>
+                        )}
+                        {blog.button2_label && blog.button2_link && (
+                            <a
+                                href={blog.button2_link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="bg-white text-orange-600 border border-orange-600 hover:bg-orange-50 font-semibold py-3 px-6 rounded-full shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1"
+                            >
+                                {blog.button2_label} &rarr;
+                            </a>
+                        )}
+                    </div>
+                ) : null}
             </div>
             <Footer />
         </div>
