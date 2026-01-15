@@ -1658,21 +1658,7 @@ const TeamSection = () => {
         </div>
       )}
 
-      {/* Debug Panel */}
-      <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 shadow-inner">
-        <h3 className="font-semibold mb-2 text-orange-800">🛠️ Admin Team Debug Info:</h3>
-        <div className="text-sm text-gray-700">
-          <p>• Total members loaded: {teamMembers.length}</p>
-          <p>• Members with images: {teamMembers.filter(m => m.image_url).length}</p>
-          <p>• Members without images: {teamMembers.filter(m => !m.image_url).length}</p>
-          <details className="mt-2">
-            <summary className="cursor-pointer text-orange-600 hover:text-orange-800">Raw API Data</summary>
-            <pre className="mt-2 bg-white p-2 rounded text-xs overflow-auto max-h-40 border border-orange-100">
-              {JSON.stringify(teamMembers, null, 2)}
-            </pre>
-          </details>
-        </div>
-      </div>
+
 
       {showForm ? (
         <div className="bg-orange-50 p-6 rounded-lg shadow-inner border border-orange-100">
