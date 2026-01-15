@@ -75,6 +75,22 @@ const BlogDetails = () => {
                     ))}
                 </div>
 
+                {/* Share Section */}
+                <div className="mt-8 pt-6 border-t border-orange-200">
+                    <button
+                        onClick={() => {
+                            // Use the backend share URL if available, else current URL
+                            const backendUrl = import.meta.env.VITE_API_BASE_URL;
+                            const shareUrl = `${backendUrl}/api/share/blogs/${blog.slug || blog.id}`;
+                            navigator.clipboard.writeText(shareUrl);
+                            alert('Link copied to clipboard! Share this link for proper previews.');
+                        }}
+                        className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition flex items-center gap-2"
+                    >
+                        <span>Share Blog</span>
+                    </button>
+                </div>
+
                 {/* Optional Action Buttons */}
                 {(blog.button1_label && blog.button1_link) || (blog.button2_label && blog.button2_link) ? (
                     <div className="mt-8 flex flex-wrap gap-4 pt-6 border-t border-orange-200">
