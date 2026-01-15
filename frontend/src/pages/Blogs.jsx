@@ -63,7 +63,7 @@ const Blogs = () => {
                                     {blog.content.substring(0, 150)}...
                                 </p>
                                 <Link
-                                    to={`/blogs/${blog.id}`}
+                                    to={`/blogs/${blog.slug || blog.id}`}
                                     className="inline-block bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition"
                                 >
                                     Read More

@@ -435,9 +435,13 @@ const BlogsSection = () => {
             <div className="flex space-x-3 pt-4">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-orange-600 to-red-600 text-white px-6 py-2 rounded-md hover:from-orange-700 hover:to-red-700 shadow-md transition-all"
+                disabled={isUploading || isLoading}
+                className={`text-white px-6 py-2 rounded-md shadow-md transition-all ${isUploading || isLoading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700'
+                  }`}
               >
-                {selectedBlog ? 'Update' : 'Create'}
+                {isUploading || isLoading ? 'Processing...' : (selectedBlog ? 'Update' : 'Create')}
               </button>
               <button
                 type="button"

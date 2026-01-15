@@ -39,9 +39,9 @@ function App() {
         {/* Public routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/events" element={<Events />} />
-        <Route path="/events/:eventId" element={<EventDetails />} />
+        <Route path="/events/:slug" element={<EventDetails />} />
         <Route path="/blogs" element={<Blogs />} />
-        <Route path="/blogs/:blogId" element={<BlogDetails />} />
+        <Route path="/blogs/:slug" element={<BlogDetails />} />
         <Route path="/admin-login" element={<AdminLogin />} />
 
         {/* Protected routes */}

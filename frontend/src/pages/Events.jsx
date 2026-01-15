@@ -29,8 +29,8 @@ const Events = () => {
     getEvents();
   }, []);
 
-  const handleEventClick = (eventId) => {
-    navigate(`/events/${eventId}`);
+  const handleEventClick = (event) => {
+    navigate(`/events/${event.slug || event.id}`);
   };
 
   const isEventDatePassed = (event) => {
@@ -54,7 +54,7 @@ const Events = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-yellow-50">
       <Navbar />
-      
+
       {/* Hero Section */}
       <section className="relative py-16 sm:py-20 overflow-hidden">
         {/* Background pattern */}
@@ -73,7 +73,7 @@ const Events = () => {
             <h1 className="pt-2 text-3xl sm:text-4xl md:text-5xl font-bold text-orange-900 mb-4">
               सभी कार्यक्रम
             </h1>
-            
+
             <div className="inline-block mb-6">
               <span className="text-xl sm:text-2xl text-orange-900 font-medium tracking-wide">All Events</span>
               <div className="h-1 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 rounded-full mt-2"></div>
@@ -107,11 +107,10 @@ const Events = () => {
                   onClick={() => setFilter(btn.value)}
                   whileHover={{ scale: 1.05, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold transition-all duration-300 ${
-                    filter === btn.value
-                      ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg'
-                      : 'bg-white text-orange-700 border-2 border-orange-400 hover:border-orange-600 hover:shadow-md'
-                  }`}
+                  className={`px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold transition-all duration-300 ${filter === btn.value
+                    ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg'
+                    : 'bg-white text-orange-700 border-2 border-orange-400 hover:border-orange-600 hover:shadow-md'
+                    }`}
                 >
                   <span className="flex items-center gap-2">
                     <span className="hidden sm:inline">{btn.label}</span>
@@ -150,9 +149,9 @@ const Events = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                   >
-                    <EventCard 
-                      event={event} 
-                      onClick={() => handleEventClick(event.id)}
+                    <EventCard
+                      event={event}
+                      onClick={() => handleEventClick(event)}
                     />
                   </motion.div>
                 ))}
@@ -187,7 +186,7 @@ const Events = () => {
           )}
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );

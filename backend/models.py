@@ -29,6 +29,7 @@ class Event(db.Model):
     date = Column(Date, nullable=False)
     description = Column(Text)
     is_active = Column(Boolean, default=True)
+    slug = Column(String(255), unique=True)
     cover_image_url = Column(String(255))
     qr_code_url = Column(String(255))
     registrations = relationship('Registration', back_populates='event', cascade='all, delete-orphan')
@@ -85,6 +86,7 @@ class Blog(db.Model):
     __tablename__ = 'blogs'
     id = Column(Integer, primary_key=True)
     title = Column(String(200), nullable=False)
+    slug = Column(String(255), unique=True)
     content = Column(Text, nullable=False)  # Markdown or HTML
     author = Column(String(100), default='Admin')
     cover_image_url = Column(String(255))

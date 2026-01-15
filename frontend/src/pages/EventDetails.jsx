@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaArrowLeft, FaCalendarAlt, FaTimes, FaCheckCircle, FaTimesCircle, FaExclamationCircle } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
@@ -8,7 +9,7 @@ import RegistrationForm from '../components/RegistrationForm';
 import { fetchPublicEventDetails } from '../utils/api';
 
 const EventDetails = () => {
-  const { eventId } = useParams();
+  const { slug } = useParams();
   const location = useLocation();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +20,7 @@ const EventDetails = () => {
   useEffect(() => {
     const getEventDetails = async () => {
       try {
-        const data = await fetchPublicEventDetails(eventId);
+        const data = await fetchPublicEventDetails(slug);
         console.log('Event details:', data);
         setEvent(data);
         setLoading(false);
@@ -30,7 +31,7 @@ const EventDetails = () => {
     };
 
     getEventDetails();
-  }, [eventId]);
+  }, [slug]);
 
   const handleEmailCheck = async (e) => {
     e.preventDefault();
@@ -172,6 +173,17 @@ const EventDetails = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-yellow-50">
+      {event && (
+        <Helmet>
+          <title>{event.name} | Hindi Samiti</title>
+          <meta name="description" content={event.description ? event.description.substring(0, 160).replace(/<[^>]*>?/gm, '') : ''} />
+          <meta property="og:title" content={event.name} />
+          <meta property="og:description" content={event.description ? event.description.substring(0, 160).replace(/<[^>]*>?/gm, '') : ''} />
+          {event.cover_image_url && <meta property="og:image" content={event.cover_image_url} />}
+          <meta property="og:url" content={window.location.href} />
+          <meta property="og:type" content="website" />
+        </Helmet>
+      )}
       <Navbar />
 
       {/* Modal-style Content Container */}

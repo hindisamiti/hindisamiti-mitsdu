@@ -20,6 +20,10 @@ from io import BytesIO
 import uuid
 import mimetypes
 from utils.image_upload import upload_image, check_cloudinary_config
+from slugify import slugify
+import uuid
+import random
+import string
 
 # Import your models
 from models import db, Admin, Image, Intro, Event, EventFormField, Registration, RegistrationFieldResponse, TeamMember, Blog
@@ -89,6 +93,31 @@ def token_required(f):
         return f(current_admin, *args, **kwargs)
 
     return decorated
+
+def generate_unique_slug(model, title, allow_unicode=True):
+    """
+    Generate a unique slug for a model (Blog or Event) based on title.
+    Supports Hindi/Unicode characters if allow_unicode is True.
+    """
+    # Generate initial slug
+    slug = slugify(title, allow_unicode=allow_unicode)
+    
+    # Fallback for empty slug (e.g. if title contains only special chars that get stripped)
+    if not slug:
+        slug = f"post-{uuid.uuid4().hex[:8]}"
+    
+    original_slug = slug
+    counter = 1
+    
+    # Check for uniqueness
+    while True:
+        existing = model.query.filter_by(slug=slug).first()
+        if not existing:
+            return slug
+        
+        # If exists, append number
+        slug = f"{original_slug}-{counter}"
+        counter += 1
 
 # Public Routes (No Authentication Required)
 
@@ -164,7 +193,8 @@ def get_public_events():
                 'description': event.description,
                 'cover_image_url': event.cover_image_url,
                 'is_active': event.is_active,
-                'qr_code_url': event.qr_code_url
+                'qr_code_url': event.qr_code_url,
+                'slug': event.slug
             }
             
             # Include form fields if requested
@@ -188,11 +218,16 @@ def get_public_events():
         print(f"❌ Error in get_public_events: {str(e)}")
         return jsonify({'message': str(e)}), 500
 
-@route.route('/api/events/<int:event_id>', methods=['GET'])
-def get_public_event_details(event_id):
-    """Public endpoint to get specific event details with form fields"""
+@route.route('/api/events/<event_id_or_slug>', methods=['GET'])
+def get_public_event_details(event_id_or_slug):
+    """Public endpoint to get specific event details by ID or Slug"""
     try:
-        event = Event.query.filter_by(id=event_id).first()
+        # Try to lookup by ID first (if integer)
+        if event_id_or_slug.isdigit():
+           event = Event.query.filter_by(id=int(event_id_or_slug)).first()
+        else:
+           # Lookup by slug
+           event = Event.query.filter_by(slug=event_id_or_slug).first()
         
         if not event:
             return jsonify({'message': 'Event not found or not active'}), 404
@@ -347,6 +382,49 @@ def fix_blog_schema(current_admin):
     except Exception as e:
         db.session.rollback()
         print(f"❌ BLOG SCHEMA FIX ERROR: {str(e)}")
+        return jsonify({'message': str(e)}), 500
+
+@route.route('/api/admin/fix-slug-schema', methods=['POST'])
+@token_required
+def fix_slug_schema(current_admin):
+    """Run schema migration for slugs and backfill data"""
+    try:
+        print("🔧 SLUG SCHEMA FIX: Attempting to add slug columns and backfill")
+        
+        # 1. Add columns using raw SQL (safe if exists)
+        commands = [
+            "ALTER TABLE events ADD COLUMN IF NOT EXISTS slug VARCHAR(255) UNIQUE",
+            "ALTER TABLE blogs ADD COLUMN IF NOT EXISTS slug VARCHAR(255) UNIQUE"
+        ]
+        
+        for cmd in commands:
+            try:
+                db.session.execute(text(cmd))
+            except Exception as item_error:
+                print(f"⚠️ SQL execution note: {item_error}")
+        
+        db.session.commit()
+        print("✅ Columns checked/added")
+
+        # 2. Backfill Event Slugs
+        events = Event.query.filter(Event.slug == None).all()
+        for event in events:
+            event.slug = generate_unique_slug(Event, event.name)
+            print(f"   Backfilled event: {event.name} -> {event.slug}")
+            
+        # 3. Backfill Blog Slugs
+        blogs = Blog.query.filter(Blog.slug == None).all()
+        for blog in blogs:
+            blog.slug = generate_unique_slug(Blog, blog.title)
+            print(f"   Backfilled blog: {blog.title} -> {blog.slug}")
+            
+        db.session.commit()
+        print("✅ Data backfill complete")
+        
+        return jsonify({'message': 'Slug schema updated and backfilled successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"❌ SLUG SCHEMA FIX ERROR: {str(e)}")
         return jsonify({'message': str(e)}), 500
 
 # Admin Home Content Routes
@@ -626,9 +704,13 @@ def create_event(current_admin):
         cover_image_url = data.get('cover_image_url', '')
         print(f"🖼️ Cover image URL: {cover_image_url}")
         
+        # Generate slug
+        slug = generate_unique_slug(Event, data['name'])
+
         # Create event
         event = Event(
             name=data['name'],
+            slug=slug,
             date=datetime.strptime(data['date'], '%Y-%m-%d').date(),
             description=data.get('description', ''),
             is_active=data.get('is_active', True),
@@ -680,7 +762,12 @@ def update_event(current_admin, event_id):
         print(f"📝 Updating event {event_id} with data: {data}")
         
         # Update event details
-        event.name = data['name']
+        if data['name'] != event.name:
+            event.name = data['name']
+            event.slug = generate_unique_slug(Event, data['name'])
+        else:
+            event.name = data['name']
+            
         event.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
         event.description = data.get('description', '')
         event.is_active = data.get('is_active', True)
@@ -712,7 +799,8 @@ def update_event(current_admin, event_id):
         
         return jsonify({
             'message': 'Event updated successfully',
-            'cover_image_url': event.cover_image_url
+            'cover_image_url': event.cover_image_url,
+            'slug': event.slug
         }), 200
         
     except Exception as e:
@@ -1028,8 +1116,10 @@ def get_public_blogs():
                 'created_at': blog.created_at.isoformat() + 'Z',
                 'button1_label': blog.button1_label,
                 'button1_link': blog.button1_link,
+                'button1_link': blog.button1_link,
                 'button2_label': blog.button2_label,
-                'button2_link': blog.button2_link
+                'button2_link': blog.button2_link,
+                'slug': blog.slug
             })
         
         return jsonify(blogs_data), 200
@@ -1037,11 +1127,19 @@ def get_public_blogs():
     except Exception as e:
         return jsonify({'message': str(e)}), 500
 
-@route.route('/api/blogs/<int:blog_id>', methods=['GET'])
-def get_public_blog_details(blog_id):
-    """Public endpoint to get a single blog"""
+@route.route('/api/blogs/<blog_id_or_slug>', methods=['GET'])
+def get_public_blog_details(blog_id_or_slug):
+    """Public endpoint to get a single blog by ID or Slug"""
     try:
-        blog = Blog.query.get_or_404(blog_id)
+        # Try to lookup by ID first (if integer)
+        if blog_id_or_slug.isdigit():
+            blog = Blog.query.get(int(blog_id_or_slug))
+        else:
+            # Lookup by slug
+            blog = Blog.query.filter_by(slug=blog_id_or_slug).first()
+            
+        if not blog:
+             return jsonify({'message': 'Blog not found'}), 404
         
         return jsonify({
             'id': blog.id,
@@ -1067,8 +1165,11 @@ def create_blog(current_admin):
     try:
         data = request.get_json()
         
+        slug = generate_unique_slug(Blog, data['title'])
+        
         blog = Blog(
             title=data['title'],
+            slug=slug,
             content=data['content'],
             author=data.get('author', current_admin.username),
             cover_image_url=data.get('cover_image_url', ''),
@@ -1083,7 +1184,8 @@ def create_blog(current_admin):
         
         return jsonify({
             'message': 'Blog created successfully',
-            'id': blog.id
+            'id': blog.id,
+            'slug': blog.slug
         }), 201
         
     except Exception as e:
@@ -1097,7 +1199,10 @@ def update_blog(current_admin, blog_id):
     try:
         blog = Blog.query.get_or_404(blog_id)
         data = request.get_json()
-        if 'title' in data:
+        if 'title' in data and data['title'] != blog.title:
+            blog.title = data['title']
+            blog.slug = generate_unique_slug(Blog, data['title'])
+        elif 'title' in data:
             blog.title = data['title']
         if 'content' in data:
             blog.content = data['content']

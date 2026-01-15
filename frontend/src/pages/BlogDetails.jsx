@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getAbsoluteImageUrl } from '../utils/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const BlogDetails = () => {
-    const { blogId } = useParams();
+    const { slug } = useParams();
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,7 +14,8 @@ const BlogDetails = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/blogs/${blogId}`);
+                // Fetch by slug (or ID, backend handles both)
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/blogs/${slug}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch blog details');
                 }
@@ -27,7 +29,7 @@ const BlogDetails = () => {
         };
 
         fetchBlog();
-    }, [blogId]);
+    }, [slug]);
 
     if (loading) return <div className="text-center py-20">Loading...</div>;
     if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
@@ -35,6 +37,17 @@ const BlogDetails = () => {
 
     return (
         <div className="bg-orange-50 min-h-screen">
+            {blog && (
+                <Helmet>
+                    <title>{blog.title} | Hindi Samiti</title>
+                    <meta name="description" content={blog.content ? blog.content.substring(0, 160).replace(/[#*`]/g, '') : ''} />
+                    <meta property="og:title" content={blog.title} />
+                    <meta property="og:description" content={blog.content ? blog.content.substring(0, 160).replace(/[#*`]/g, '') : ''} />
+                    {blog.cover_image_url && <meta property="og:image" content={blog.cover_image_url.startsWith('http') ? blog.cover_image_url : `${import.meta.env.VITE_API_BASE_URL}${blog.cover_image_url}`} />}
+                    <meta property="og:url" content={window.location.href} />
+                    <meta property="og:type" content="article" />
+                </Helmet>
+            )}
             <Navbar />
             <div className="container mx-auto px-4 py-8 mt-16 max-w-4xl">
                 <Link to="/blogs" className="text-orange-600 hover:underline mb-4 inline-block">&larr; Back to Blogs</Link>
