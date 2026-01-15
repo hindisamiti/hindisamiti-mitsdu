@@ -9,7 +9,7 @@ import RegistrationForm from '../components/RegistrationForm';
 import { fetchPublicEventDetails } from '../utils/api';
 
 const EventDetails = () => {
-  const { slug } = useParams();
+  const { eventId } = useParams();
   const location = useLocation();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const EventDetails = () => {
   useEffect(() => {
     const getEventDetails = async () => {
       try {
-        const data = await fetchPublicEventDetails(slug);
+        const data = await fetchPublicEventDetails(eventId);
         console.log('Event details:', data);
         setEvent(data);
         setLoading(false);
@@ -31,7 +31,7 @@ const EventDetails = () => {
     };
 
     getEventDetails();
-  }, [slug]);
+  }, [eventId]);
 
   const handleEmailCheck = async (e) => {
     e.preventDefault();
@@ -287,6 +287,12 @@ const EventDetails = () => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            onClick={() => {
+                              const backendUrl = import.meta.env.VITE_API_BASE_URL;
+                              const shareUrl = `${backendUrl}/api/share/events/${event.id}`;
+                              navigator.clipboard.writeText(shareUrl);
+                              alert('Link copied to clipboard! Share this link for proper previews.');
+                            }}
                             className="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-gray-900"
                             placeholder="your.email@example.com"
                             required

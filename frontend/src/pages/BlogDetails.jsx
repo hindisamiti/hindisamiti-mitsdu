@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 const BlogDetails = () => {
-    const { slug } = useParams();
+    const { blogId } = useParams();
     const [blog, setBlog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,8 +14,8 @@ const BlogDetails = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                // Fetch by slug (or ID, backend handles both)
-                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/blogs/${slug}`);
+                // Fetch by ID
+                const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/blogs/${blogId}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch blog details');
                 }
@@ -29,7 +29,7 @@ const BlogDetails = () => {
         };
 
         fetchBlog();
-    }, [slug]);
+    }, [blogId]);
 
     if (loading) return <div className="text-center py-20">Loading...</div>;
     if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
@@ -79,9 +79,9 @@ const BlogDetails = () => {
                 <div className="mt-8 pt-6 border-t border-orange-200">
                     <button
                         onClick={() => {
-                            // Use the backend share URL if available, else current URL
+                            // Use the backend share URL with ID
                             const backendUrl = import.meta.env.VITE_API_BASE_URL;
-                            const shareUrl = `${backendUrl}/api/share/blogs/${blog.slug || blog.id}`;
+                            const shareUrl = `${backendUrl}/api/share/blogs/${blog.id}`;
                             navigator.clipboard.writeText(shareUrl);
                             alert('Link copied to clipboard! Share this link for proper previews.');
                         }}

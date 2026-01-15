@@ -30,7 +30,7 @@ const Events = () => {
   }, []);
 
   const handleEventClick = (event) => {
-    navigate(`/events/${event.slug || event.id}`);
+    navigate(`/events/${event.id}`);
   };
 
   const isEventDatePassed = (event) => {

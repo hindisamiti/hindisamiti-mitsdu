@@ -293,21 +293,6 @@ const BlogsSection = () => {
         <div className="flex space-x-3">
           <button
             onClick={async () => {
-              if (!window.confirm("This will generate slugs for all blogs and events. Continue?")) return;
-              try {
-                await fixSlugSchema();
-                alert('Slugs generated successfully!');
-                loadBlogs();
-              } catch (e) {
-                alert('Failed to update slugs: ' + e.message);
-              }
-            }}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full shadow-md text-sm transition-all"
-          >
-            Fix Slugs (DB)
-          </button>
-          <button
-            onClick={async () => {
               try {
                 // Import dynamically or use the one from props/context if available, 
                 // but since we are in the same file as imports:
