@@ -5,6 +5,7 @@ import HomeSection from '../sections/HomeSection';
 import AboutSection from '../sections/AboutSection';
 import EventsSection from '../sections/EventsSection';
 import TeamSection from '../sections/TeamSection';
+import LatestBlogsSection from '../sections/LatestBlogsSection';
 
 const Landing = () => {
   // Smooth scroll to section when clicking navigation links
@@ -22,10 +23,10 @@ const Landing = () => {
 
     // Handle initial load with hash
     handleHashChange();
-    
+
     // Add event listener for hash changes
     window.addEventListener('hashchange', handleHashChange);
-    
+
     return () => {
       window.removeEventListener('hashchange', handleHashChange);
     };
@@ -38,15 +39,19 @@ const Landing = () => {
         <section id="home" className="scroll-mt-16">
           <HomeSection />
         </section>
-        
+
         <section id="about" className="scroll-mt-16">
           <AboutSection />
         </section>
-        
+
         <section id="events" className="scroll-mt-16">
           <EventsSection />
         </section>
-        
+
+        <section id="blogs" className="scroll-mt-16">
+          <LatestBlogsSection />
+        </section>
+
         <section id="team" className="scroll-mt-16">
           <TeamSection />
         </section>
