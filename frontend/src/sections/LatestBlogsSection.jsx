@@ -54,23 +54,21 @@ const LatestBlogsSection = () => {
                         {blogs.map(blog => (
                             <div key={blog.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
                                 {blog.cover_image_url && (
-                                    <div className="h-48 overflow-hidden bg-gray-100">
+                                    <div className="h-60 overflow-hidden bg-gray-50 border-b border-gray-100">
                                         <img
                                             src={blog.cover_image_url.startsWith('http') ? blog.cover_image_url : `${import.meta.env.VITE_API_BASE_URL}${blog.cover_image_url}`}
                                             alt={blog.title}
-                                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                                            className="w-full h-full object-contain transition-transform duration-500 hover:scale-105"
                                         />
                                     </div>
                                 )}
                                 <div className="p-6 flex-1 flex flex-col">
                                     <h3 className="text-xl font-bold text-gray-800 mb-2 line-clamp-2">{blog.title}</h3>
                                     <div className="text-sm text-gray-500 mb-4 flex justify-between items-center">
-                                        <span>{new Date(blog.created_at).toLocaleDateString()}</span>
+                                        <span>{new Date(blog.created_at).toLocaleDateString('en-GB')}</span>
                                         <span>{blog.author || 'Admin'}</span>
                                     </div>
-                                    <p className="text-gray-600 mb-4 line-clamp-3 text-sm flex-1">
-                                        {blog.content.substring(0, 150)}...
-                                    </p>
+                                    {/* Content hidden as requested */}
                                     <a
                                         href={`/blogs/${blog.id}`}
                                         className="text-orange-600 font-semibold hover:text-orange-800 transition-colors self-start mt-auto"
