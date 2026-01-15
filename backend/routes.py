@@ -1475,8 +1475,22 @@ def upload_file():
             return jsonify({'error': 'File size exceeds 5MB limit'}), 400
         
         if file and allowed_file(file.filename):
-            # Create upload directory if it doesn't exist
+            # Try Cloudinary upload FIRST (Persistence for Render)
+            cloudinary_url = upload_image(file, folder="hindi_samiti/registrations")
+            
+            if cloudinary_url:
+                return jsonify({
+                    'success': True,
+                    'url': cloudinary_url,
+                    'filename': file.filename
+                }), 200
+            
+            # Fallback to local storage (only if Cloudinary fails, though not ideal for Render)
+            print("⚠️ Screenshot upload: Cloudinary failed, falling back to local storage")
             os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+            
+            # Reset file pointer since Cloudinary read it
+            file.seek(0)
             
             # Generate unique filename
             file_extension = file.filename.rsplit('.', 1)[1].lower()
@@ -1486,7 +1500,7 @@ def upload_file():
             filepath = os.path.join(UPLOAD_FOLDER, filename)
             file.save(filepath)
             
-            # Return the file URL (adjust based on your static file serving setup)
+            # Return the file URL (local)
             file_url = f"/uploads/screenshots/{filename}"
             
             return jsonify({
