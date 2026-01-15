@@ -39,7 +39,7 @@ const EventDetails = () => {
       // ✅ Use environment variable for API base URL
       const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
-      const response = await fetch(`${API_BASE_URL}/api/events/${eventId}/check-registration?email=${encodeURIComponent(email)}`);
+      const response = await fetch(`${API_BASE_URL}/api/registrations/check/${eventId}?email=${encodeURIComponent(email)}`);
       const data = await response.json();
 
       if (data.exists) {

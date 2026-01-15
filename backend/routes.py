@@ -1445,117 +1445,10 @@ def serve_blog_cover_image(filename):
         abort(500)
 
 
-@route.route('/api/events/<int:event_id>/check-registration', methods=['GET'])
-def check_registration_status(event_id):
-    """
-    Check if an email is already registered for an event and return registration status
-    """
-    try:
-        email = request.args.get('email')
-        
-        if not email:
-            return jsonify({'error': 'Email parameter is required'}), 400
-        
-        # Check if the event exists
-        event = db.session.query(Event).filter_by(id=event_id).first()
-        if not event:
-            return jsonify({'error': 'Event not found'}), 404
-        
-        # Check if email is already registered for this event
-        registration = db.session.query(Registration).filter_by(
-            event_id=event_id,
-            email=email.lower().strip()
-        ).first()
-        
-        if registration:
-            return jsonify({
-                'exists': True,
-                'status': registration.status,
-                'registration_id': registration.id,
-                'timestamp': registration.timestamp.isoformat()
-            }), 200
-        else:
-            return jsonify({
-                'exists': False
-            }), 200
-            
-    except Exception as e:
-        print(f"Error checking registration status: {str(e)}")
-        return jsonify({'error': 'Internal server error'}), 500
 
 
-@route.route('/api/events/<int:event_id>/register', methods=['POST'])
-def register_for_event(event_id):
-    """
-    Register a user for an event
-    """
-    try:
-        data = request.get_json()
-        
-        if not data:
-            return jsonify({'error': 'Request body is required'}), 400
-        
-        email = data.get('email', '').lower().strip()
-        if not email:
-            return jsonify({'error': 'Email is required'}), 400
-        
-        # Check if the event exists and is active
-        event = db.session.query(Event).filter_by(id=event_id).first()
-        if not event:
-            return jsonify({'error': 'Event not found'}), 404
-        
-        if not event.is_active:
-            return jsonify({'error': 'Registration is closed for this event'}), 400
-        
-        # Check if email is already registered
-        existing_registration = db.session.query(Registration).filter_by(
-            event_id=event_id,
-            email=email
-        ).first()
-        
-        if existing_registration:
-            return jsonify({
-                'error': 'Email already registered',
-                'status': existing_registration.status
-            }), 400
-        
-        # Create new registration
-        registration = Registration(
-            event_id=event_id,
-            email=email,
-            status='pending'
-        )
-        
-        db.session.add(registration)
-        db.session.flush()  # To get the registration ID
-        
-        # Handle form field responses
-        form_responses = data.get('responses', [])
-        for response_data in form_responses:
-            field_id = response_data.get('field_id')
-            value = response_data.get('value')
-            
-            if field_id and value:
-                field_response = RegistrationFieldResponse(
-                    registration_id=registration.id,
-                    field_id=field_id,
-                    value=value
-                )
-                db.session.add(field_response)
-        
-        db.session.commit()
-        
-        return jsonify({
-            'success': True,
-            'registration_id': registration.id,
-            'status': registration.status,
-            'message': 'Registration submitted successfully. Please wait for verification.'
-        }), 201
-        
-    except Exception as e:
-        db.session.rollback()
-        print(f"Error registering for event: {str(e)}")
-        return jsonify({'error': 'Internal server error'}), 500
+
+
 
 import re
 
@@ -1568,9 +1461,7 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def validate_email(email):
-    pattern = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
-    return re.match(pattern, email) is not None
+
 
 @route.route('/api/registrations/check/<int:event_id>', methods=['GET'])
 def check_existing_registration(event_id):
