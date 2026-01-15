@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaArrowLeft, FaCalendarAlt, FaTimes, FaCheckCircle, FaTimesCircle, FaExclamationCircle } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
@@ -173,17 +172,6 @@ const EventDetails = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-orange-50 via-amber-50 to-yellow-50">
-      {event && (
-        <Helmet>
-          <title>{event.name} | Hindi Samiti</title>
-          <meta name="description" content={event.description ? event.description.substring(0, 160).replace(/<[^>]*>?/gm, '') : ''} />
-          <meta property="og:title" content={event.name} />
-          <meta property="og:description" content={event.description ? event.description.substring(0, 160).replace(/<[^>]*>?/gm, '') : ''} />
-          {event.cover_image_url && <meta property="og:image" content={event.cover_image_url} />}
-          <meta property="og:url" content={window.location.href} />
-          <meta property="og:type" content="website" />
-        </Helmet>
-      )}
       <Navbar />
 
       {/* Modal-style Content Container */}
@@ -287,12 +275,6 @@ const EventDetails = () => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            onClick={() => {
-                              const backendUrl = import.meta.env.VITE_API_BASE_URL;
-                              const shareUrl = `${backendUrl}/api/share/events/${event.id}`;
-                              navigator.clipboard.writeText(shareUrl);
-                              alert('Link copied to clipboard! Share this link for proper previews.');
-                            }}
                             className="w-full px-4 py-3 bg-white border-2 border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all text-gray-900"
                             placeholder="your.email@example.com"
                             required

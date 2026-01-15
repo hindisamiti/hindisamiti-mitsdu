@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { getAbsoluteImageUrl } from '../utils/api';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -37,17 +36,6 @@ const BlogDetails = () => {
 
     return (
         <div className="bg-orange-50 min-h-screen">
-            {blog && (
-                <Helmet>
-                    <title>{blog.title} | Hindi Samiti</title>
-                    <meta name="description" content={blog.content ? blog.content.substring(0, 160).replace(/[#*`]/g, '') : ''} />
-                    <meta property="og:title" content={blog.title} />
-                    <meta property="og:description" content={blog.content ? blog.content.substring(0, 160).replace(/[#*`]/g, '') : ''} />
-                    {blog.cover_image_url && <meta property="og:image" content={blog.cover_image_url.startsWith('http') ? blog.cover_image_url : `${import.meta.env.VITE_API_BASE_URL}${blog.cover_image_url}`} />}
-                    <meta property="og:url" content={window.location.href} />
-                    <meta property="og:type" content="article" />
-                </Helmet>
-            )}
             <Navbar />
             <div className="container mx-auto px-4 py-8 mt-16 max-w-4xl">
                 <Link to="/blogs" className="text-orange-600 hover:underline mb-4 inline-block">&larr; Back to Blogs</Link>
@@ -73,22 +61,6 @@ const BlogDetails = () => {
                     {blog.content.split('\n').map((paragraph, idx) => (
                         <p key={idx} className="mb-4">{paragraph}</p>
                     ))}
-                </div>
-
-                {/* Share Section */}
-                <div className="mt-8 pt-6 border-t border-orange-200">
-                    <button
-                        onClick={() => {
-                            // Use the backend share URL with ID
-                            const backendUrl = import.meta.env.VITE_API_BASE_URL;
-                            const shareUrl = `${backendUrl}/api/share/blogs/${blog.id}`;
-                            navigator.clipboard.writeText(shareUrl);
-                            alert('Link copied to clipboard! Share this link for proper previews.');
-                        }}
-                        className="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition flex items-center gap-2"
-                    >
-                        <span>Share Blog</span>
-                    </button>
                 </div>
 
                 {/* Optional Action Buttons */}
