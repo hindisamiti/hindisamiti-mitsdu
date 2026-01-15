@@ -476,7 +476,7 @@ export const viewScreenshot = async (registrationId) => {
 
 
 export const fixBlogSchema = async () => {
-  const response = await api.post('/admin/fix-schema-blog', {});
+  const response = await api.post('/admin/fix-blog-schema', {});
   return response.data;
 };
 

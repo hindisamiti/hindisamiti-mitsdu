@@ -144,8 +144,15 @@ const BlogsSection = () => {
       setIsLoading(true);
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/blogs`);
       const data = await response.json();
-      setBlogs(data);
+
+      if (Array.isArray(data)) {
+        setBlogs(data);
+      } else {
+        setBlogs([]);
+        setMessage({ text: data.message || 'Failed to load blogs', type: 'error' });
+      }
     } catch (error) {
+      setBlogs([]);
       setMessage({ text: 'Failed to load blogs', type: 'error' });
     } finally {
       setIsLoading(false);
