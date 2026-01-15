@@ -501,30 +501,9 @@ def upload_gallery_image(current_admin):
             }), 201
             
         # Fallback to local (only if Cloudinary fails)
-        if file and allowed_file(file.filename):
-            print("📁 UPLOAD: Cloudinary failed, using local storage")
-            
-            # Generate unique filename
-            filename = str(uuid.uuid4()) + '.' + file.filename.rsplit('.', 1)[1].lower()
-            upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
-            os.makedirs(upload_folder, exist_ok=True)
-            filepath = os.path.join(upload_folder, filename)
-            file.save(filepath)
-            
-            # Create image record
-            image_url = f'/uploads/{filename}'
-            new_image = Image(url=image_url, caption=caption)
-            db.session.add(new_image)
-            db.session.commit()
-            
-            return jsonify({
-                'id': new_image.id,
-                'url': new_image.url,
-                'caption': new_image.caption,
-                'created_at': new_image.created_at.isoformat()
-            }), 201
-        else:
-            return jsonify({'message': 'Invalid file type'}), 400
+        # If Cloudinary fails, return error immediately
+        print("❌ UPLOAD: Cloudinary upload returned None")
+        return jsonify({'message': 'Failed to upload image to cloud storage'}), 500
             
     except Exception as e:
         db.session.rollback()
