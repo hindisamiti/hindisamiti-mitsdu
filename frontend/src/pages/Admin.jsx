@@ -105,7 +105,7 @@ const Admin = () => {
           {activeTab === 'events' && <EventsSection />}
           {activeTab === 'registrations' && <RegistrationsSection />}
           {activeTab === 'team' && <TeamSection />}
-          {activeTab === 'team' && <TeamSection />}
+
           {activeTab === 'blogs' && <BlogsSection />}
           {activeTab === 'system' && <SystemSection />}
         </div>
